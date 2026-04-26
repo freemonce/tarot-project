@@ -27,6 +27,27 @@ import useCardTilt from "../hooks/useCardTilt";
 
 import { saveResult } from "../services/storage";
 
+type CategoryKey =
+  | "love"
+  | "career"
+  | "money"
+  | "mind"
+  | "relation"
+  | "health"
+  | "future"
+  | "choice";
+
+const CATEGORY_KEYS = [
+  "love",
+  "career",
+  "money",
+  "mind",
+  "relation",
+  "health",
+  "future",
+  "choice",
+] as const;
+
 /* =====================================
    Ending Message
 ===================================== */
@@ -50,6 +71,7 @@ export default function Result() {
   const [isPreparingShare, setIsPreparingShare] = useState(false);
 
   const [toast, setToast] = useState("");
+  const toastTimer = useRef<number | null>(null);
 
   /* =====================================
      fallback
@@ -79,8 +101,20 @@ export default function Result() {
   );
 
   /* =====================================
-     final data
-  ===================================== */
+   final data (SAFE VERSION)
+===================================== */
+
+  const safeCategory = CATEGORY_KEYS.includes(category as CategoryKey)
+    ? (category as CategoryKey)
+    : "love";
+
+  const normalSet = card.categoryInterpretations ?? {};
+  const reverseSet = card.reversedCategoryInterpretations ?? {};
+
+  const selectedData = isReversed
+    ? (reverseSet[safeCategory] ?? normalSet[safeCategory])
+    : normalSet[safeCategory];
+
   const finalMeaning = isReversed
     ? (card.reversedMeaning ?? card.meaning)
     : card.meaning;
@@ -89,21 +123,23 @@ export default function Result() {
     ? (card.reversedAdvice ?? card.advice)
     : card.advice;
 
-  const finalKeywords = isReversed
-    ? (card.reversedKeywords ?? card.keywords)
-    : card.keywords;
+  const finalKeywords =
+    isReversed && card.reversedKeywords?.length
+      ? card.reversedKeywords
+      : card.keywords;
 
-  const categoryData = isReversed
-    ? (card.reversedCategoryInterpretations?.[category] ??
-      card.categoryInterpretations?.[category])
-    : card.categoryInterpretations?.[category];
+  const finalCategoryMeaning = selectedData?.meaning ?? finalMeaning;
 
-  const finalCategoryMeaning = categoryData?.meaning ?? finalMeaning;
+  const finalCategoryAdvice = selectedData?.advice ?? finalAdvice;
 
-  const finalCategoryAdvice = categoryData?.advice ?? finalAdvice;
+  const resultData = {
+    meaning: finalCategoryMeaning,
+    advice: finalCategoryAdvice,
+    keywords: finalKeywords,
+  };
 
   const endingText =
-    ENDING_MESSAGE[category] ??
+    ENDING_MESSAGE[safeCategory] ??
     "당신이 찾는 답은 이미 마음속에서 움직이고 있습니다.";
 
   /* =====================================
@@ -128,10 +164,23 @@ export default function Result() {
   const showToast = (msg: string) => {
     setToast(msg);
 
-    setTimeout(() => {
+    if (toastTimer.current) {
+      clearTimeout(toastTimer.current);
+    }
+
+    toastTimer.current = window.setTimeout(() => {
       setToast("");
+      toastTimer.current = null;
     }, 1800);
   };
+
+  useEffect(() => {
+    return () => {
+      if (toastTimer.current) {
+        clearTimeout(toastTimer.current);
+      }
+    };
+  }, []);
 
   /* =====================================
      share functions
@@ -147,8 +196,10 @@ export default function Result() {
   };
 
   const copyText = async () => {
+    const reverseMark = isReversed ? " ↻" : "";
+
     const text = `
-🔮 ${card.name}
+🔮 ${card.name}${reverseMark}
 
 질문:
 ${content}
@@ -311,7 +362,7 @@ ${finalCategoryAdvice}
                 {isReversed ? " (역방향)" : ""}
               </h3>
 
-              <p>{finalCategoryMeaning}</p>
+              <p>{resultData.meaning}</p>
             </section>
           )}
 
@@ -320,14 +371,14 @@ ${finalCategoryAdvice}
             <section className="section-box reveal-up">
               <h3>카드의 조언</h3>
 
-              <p>{finalCategoryAdvice}</p>
+              <p>{resultData.advice}</p>
             </section>
           )}
 
           {/* keywords */}
           {step >= STEP.KEYWORD && (
             <div className="keyword-wrap reveal-up">
-              {finalKeywords.map((word) => (
+              {resultData.keywords.map((word) => (
                 <span key={word}>#{word}</span>
               ))}
             </div>
@@ -384,9 +435,9 @@ ${finalCategoryAdvice}
                 cardName={card.name}
                 cardImage={card.image}
                 question={content}
-                advice={finalCategoryAdvice}
-                meaning={finalCategoryMeaning}
-                keywords={finalKeywords}
+                advice={resultData.advice}
+                meaning={resultData.meaning}
+                keywords={resultData.keywords}
                 isReversed={isReversed}
               />
             </div>
