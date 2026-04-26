@@ -1,0 +1,53 @@
+:root {
+  /* 🎨 Background */
+  --color-bg-primary: #000;
+  --color-bg-secondary: #111;
+  --color-bg-card: rgba(0, 0, 0, 0.7);
+
+  /* 📝 Text */
+  --color-text-primary: #fff;
+  --color-text-secondary: #aaa;
+
+  /* 🌟 Accent */
+  --color-accent-primary: #6c5ce7;
+  --color-accent-secondary: #a29bfe;
+
+  /* ✨ Highlight */
+  --color-highlight: #ffd700;
+
+  /* 📐 Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* 🔲 Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* 🌫 Shadow */
+  --shadow-sm: 0 0 10px rgba(255, 255, 255, 0.05);
+  --shadow-md: 0 0 20px rgba(255, 255, 255, 0.1);
+  --shadow-lg: 0 0 40px rgba(255, 215, 0, 0.4);
+
+  /* ⚡ Transition */
+  --transition-fast: 0.2s ease;
+  --transition: 0.4s ease;
+  --transition-slow: 0.8s ease;
+}
+
+/* 🌞 라이트 모드 */
+.light {
+  --color-bg-primary: #fff;
+  --color-bg-secondary: #f5f5f5;
+  --color-bg-card: rgba(255, 255, 255, 0.8);
+
+  --color-text-primary: #111;
+  --color-text-secondary: #555;
+
+  --color-accent-primary: #6c5ce7;
+  --color-highlight: #ffb300;
+}

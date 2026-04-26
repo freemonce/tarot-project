@@ -1,0 +1,209 @@
+/* src/styles/Card.css */
+
+.card-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: white;
+}
+
+.card-title {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.card-toolbar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 30;
+}
+
+@media (max-width: 768px) {
+  .card-toolbar {
+    top: 14px;
+    right: 14px;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}
+
+/* 카드 그리드 */
+.card-grid {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+  gap: 16px;
+
+  justify-items: center;
+}
+
+/* 카드 */
+.tarot-card {
+  width: 100%;
+  max-width: 120px;
+  height: 180px;
+
+  aspect-ratio: 2 / 3;
+  perspective: 1000px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.8s ease;
+
+  animation: fadeUp 0.5s ease;
+  will-change: transform;
+}
+
+.tarot-card:hover .card-inner {
+  transform: translateY(-8px) scale(1.04);
+}
+
+/* 내부 */
+.card-inner {
+  width: 100%;
+  height: 100%;
+
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease;
+}
+
+/* 선택시 뒤집기 */
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+/* 앞뒤 공통 */
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 12px;
+  overflow: hidden;
+
+  backface-visibility: hidden;
+}
+
+.card-front {
+  background: #111;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background: #000;
+}
+
+.tarot-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reversed {
+  transform: rotate(180deg);
+}
+
+/* 선택 안 된 카드 */
+.tarot-card.dimmed {
+  opacity: 0;
+  transform: scale(0.75);
+  pointer-events: none;
+}
+
+/* 선택 카드 */
+.tarot-card.selected {
+  position: relative;
+  z-index: 100;
+}
+
+/* 확대 */
+.tarot-card.zoomed {
+  transform-origin: center center;
+}
+
+/* glow */
+.tarot-card.glow {
+  box-shadow:
+    0 0 18px rgba(255, 215, 0, 0.55),
+    0 0 50px rgba(255, 140, 0, 0.35);
+}
+
+/* 배경 dim */
+.dim-layer {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(5px);
+
+  z-index: 50;
+}
+
+/* 페이지 암전 */
+.page-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.75) 60%,
+    rgba(0, 0, 0, 1) 100%
+  );
+
+  animation: fadeToBlack 0.7s ease forwards;
+}
+
+/* 로딩 */
+.loading-screen {
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ddd;
+  font-size: 1rem;
+
+  animation: fadeUp 0.8s ease;
+}
+
+/* 등장 */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 암전 */
+@keyframes fadeToBlack {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

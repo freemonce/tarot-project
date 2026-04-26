@@ -1,0 +1,323 @@
+/* src/styles/pages/Write.css */
+
+body {
+  margin: 0;
+}
+
+/* ===============================
+   PAGE
+================================= */
+.write-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px;
+
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(123, 92, 255, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 80% 75%,
+      rgba(255, 217, 120, 0.1),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #09090f 0%, #121221 55%, #08080d 100%);
+}
+
+/* ===============================
+   BACKGROUND FX
+================================= */
+.write-stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  background-image:
+    radial-gradient(circle, white 1px, transparent 1px),
+    radial-gradient(circle, white 1px, transparent 1px);
+  background-size:
+    42px 42px,
+    64px 64px;
+  background-position:
+    0 0,
+    18px 20px;
+}
+
+.write-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(90px);
+  opacity: 0.45;
+}
+
+.glow-1 {
+  width: 260px;
+  height: 260px;
+  background: rgba(123, 92, 255, 0.22);
+  top: 80px;
+  left: 90px;
+}
+
+.glow-2 {
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 217, 120, 0.18);
+  right: 80px;
+  bottom: 80px;
+}
+
+/* ===============================
+   CARD
+================================= */
+.write-shell {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 760px;
+
+  padding: 44px;
+  border-radius: 32px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ===============================
+   TEXT
+================================= */
+.write-badge {
+  margin: 0 0 14px;
+  color: #ffd978;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.write-title {
+  margin: 0;
+  color: white;
+  font-size: 42px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.write-subtitle {
+  margin: 16px 0 28px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ===============================
+   INPUT
+================================= */
+.write-box {
+  position: relative;
+}
+
+.write-textarea {
+  width: 100%;
+  min-height: 170px;
+  resize: none;
+
+  box-sizing: border-box;
+  padding: 22px 22px 50px;
+
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+
+  font-size: 17px;
+  line-height: 1.7;
+  outline: none;
+
+  transition: 0.25s ease;
+}
+
+.write-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.write-textarea:focus {
+  border-color: rgba(123, 92, 255, 0.55);
+  box-shadow: 0 0 0 4px rgba(123, 92, 255, 0.14);
+}
+
+.write-counter {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 13px;
+}
+
+.write-counter span {
+  color: #ffd978;
+  font-weight: 700;
+}
+
+/* ===============================
+   CATEGORY
+================================= */
+.write-category-grid {
+  margin-top: 28px;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.category-chip {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 58px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.category-chip:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.category-chip::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  transition: 0.35s ease;
+}
+
+.category-chip:hover::after {
+  width: 180px;
+  height: 180px;
+}
+
+.category-chip.active {
+  background: linear-gradient(135deg, #ffd978, #ffb347);
+  color: #111;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 28px rgba(255, 179, 71, 0.28);
+}
+
+.chip-icon {
+  font-size: 18px;
+}
+
+/* ===============================
+   CTA
+================================= */
+.write-submit-btn {
+  width: 100%;
+  margin-top: 28px;
+  min-height: 58px;
+
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+.write-bottom-text {
+  margin: 18px 0 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+}
+
+/* ===============================
+   SHAKE
+================================= */
+.shake {
+  animation: shakeX 0.45s ease;
+}
+
+@keyframes shakeX {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ===============================
+   MOBILE
+================================= */
+@media (max-width: 768px) {
+  .write-page {
+    padding: 18px;
+  }
+
+  .write-shell {
+    padding: 26px;
+    border-radius: 24px;
+  }
+
+  .write-title {
+    font-size: 30px;
+  }
+
+  .write-subtitle {
+    font-size: 14px;
+  }
+
+  .write-textarea {
+    min-height: 150px;
+    font-size: 15px;
+  }
+
+  .write-category-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .category-chip {
+    min-height: 52px;
+    font-size: 14px;
+  }
+}

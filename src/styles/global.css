@@ -1,0 +1,312 @@
+/* =========================
+   RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================
+   BASE
+========================= */
+body {
+  font-family: "Pretendard", sans-serif;
+  line-height: 1.5;
+
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+}
+
+p {
+  color: var(--color-text-secondary);
+}
+
+/* =========================
+   LAYOUT
+========================= */
+.page-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-5);
+}
+
+.page {
+  min-height: 100vh;
+  background: radial-gradient(circle, #1a1a2e, #0f0f1a);
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+
+/* =========================
+   BUTTON
+========================= */
+.btn {
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.btn-primary {
+  background: var(--color-accent-primary);
+  color: var(--color-text-primary);
+}
+
+.btn-dark {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.btn-danger {
+  background: #ff4d4f; /* 유지 (경고색은 별도 관리 가능) */
+  color: #fff;
+}
+
+/* =========================
+   CARD (공통)
+========================= */
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-md);
+}
+
+/* =========================
+   TAROT LIST (History 등)
+========================= */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.list-card {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+
+  background: var(--color-bg-card);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.list-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.list-card:active {
+  transform: scale(0.98);
+}
+
+.list-card img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.history-info {
+  flex: 1;
+}
+
+.history-info h4 {
+  margin-bottom: var(--space-2);
+}
+
+.preview-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: var(--space-2);
+}
+
+.history-info span {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  display: block;
+  margin-top: var(--space-2);
+}
+
+.history-empty {
+  text-align: center;
+  margin-top: 100px;
+  color: var(--color-text-secondary);
+}
+
+/* =========================
+   RESULT PAGE
+========================= */
+.result-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarot-result-wrapper {
+  position: relative;
+  padding: 50px 30px;
+  border-radius: var(--radius-lg);
+
+  background: var(--color-bg-card);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-lg);
+
+  opacity: 0;
+  transform: translateY(40px);
+  transition: var(--transition-slow);
+}
+
+.tarot-result-wrapper.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 카드 */
+.result-card {
+  width: 200px;
+  margin: 0 auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.result-card img {
+  width: 100%;
+  display: block;
+}
+
+.result-card:hover {
+  transform: scale(1.05);
+  transition: var(--transition);
+}
+
+/* glow */
+.card-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* 텍스트 */
+.card-name {
+  text-align: center;
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-4);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.result-content-area {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* 타이핑 */
+.intro-typing {
+  color: var(--color-highlight);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-4);
+  opacity: 0.9;
+}
+
+/* 해석 */
+.interpretation-section {
+  margin-bottom: var(--space-4);
+  text-align: left;
+  padding: 0 var(--space-2);
+}
+
+.interpretation-section strong {
+  color: var(--color-highlight);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.interpretation-section p {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* 키워드 */
+.keyword-group {
+  margin-top: var(--space-3);
+}
+
+.keyword-group span {
+  display: inline-block;
+  margin: 5px;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 20px;
+
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--color-highlight);
+}
+
+/* 버튼 영역 */
+.result-actions {
+  margin-top: var(--space-5);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+.fade-step {
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
