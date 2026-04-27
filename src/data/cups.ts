@@ -7,7 +7,7 @@ export const cups: TarotCard[] = [
     englishName: "Ace of Cups",
     type: "Cups",
     number: 1,
-    keywords: ["사랑의 시작", "감정", "기쁨", "새로운 인연"],
+    keywords: ["사랑의 시작", "감정", "기쁨", "새로운 인연", "직관", "영성"],
     reversedKeywords: ["감정 막힘", "상처", "공허함", "마음 닫힘"],
     image: "/images/Cups/Cups01.webp",
 
@@ -29,8 +29,9 @@ export const cups: TarotCard[] = [
         advice: "감정을 솔직하게 표현하세요.",
       },
       career: {
-        meaning: "좋은 분위기의 새 기회가 옵니다.",
-        advice: "사람과의 연결을 활용하세요.",
+        meaning: "새로운 프로젝트나 창의적인 아이디어가 샘솟는 시기입니다.",
+        advice:
+          "직관을 믿고 제안해 보세요. 당신의 진심이 동료들에게 닿을 것입니다.",
       },
       money: {
         meaning: "즐거운 일에서 수익 기회 가능.",
@@ -160,8 +161,10 @@ export const cups: TarotCard[] = [
         advice: "역할과 기대치를 명확히 하세요.",
       },
       money: {
-        meaning: "동업·공동 자금 문제 주의.",
-        advice: "믿음과 계약은 별개로 챙기세요.",
+        meaning:
+          "동업자나 믿었던 지인과의 금전적 신뢰에 균형이 깨질 수 있습니다.",
+        advice:
+          "관계 때문에 손해를 감수하지 마세요. 서류와 계약은 명확히 해야 합니다.",
       },
       mind: {
         meaning: "이해받지 못한다는 외로움이 커질 수 있습니다.",
@@ -234,7 +237,8 @@ export const cups: TarotCard[] = [
         advice: "외출과 활동을 늘리세요.",
       },
       future: {
-        meaning: "좋은 소식과 축하할 일이 옵니다.",
+        meaning:
+          "결혼 제안, 합격 파티 등 구체적인 경사 및 좋은 소식과 축하할 일이 옵니다.",
         advice: "주변과 기쁨을 나누세요.",
       },
       choice: {
@@ -245,8 +249,10 @@ export const cups: TarotCard[] = [
 
     reversedCategoryInterpretations: {
       love: {
-        meaning: "삼각관계, 가벼운 만남, 감정 분산 주의.",
-        advice: "재미와 진심을 구분하세요.",
+        meaning:
+          "두 사람 사이에 제 3자가 끼어들거나, 우정과 사랑 사이에서 혼란이 올 수 있습니다.",
+        advice:
+          "단순한 즐거움 뒤에 숨은 복잡한 관계의 실타래를 냉정히 살펴보세요.",
       },
       career: {
         meaning: "팀 내 잡음이나 분위기 저하 가능성.",
@@ -331,8 +337,10 @@ export const cups: TarotCard[] = [
         advice: "시야를 넓히세요.",
       },
       choice: {
-        meaning: "지금 선택은 재검토가 필요합니다.",
-        advice: "감정부터 정리하세요.",
+        meaning:
+          "주변의 제안이 매력적으로 보이지 않거나, 심리적으로 새로운 것을 받아들일 여유가 없는 정체기입니다.",
+        advice:
+          "억지로 결정하지 마세요. 마음이 내키지 않는다면 '아니오'라고 말하며 에너지를 보존해도 괜찮습니다.",
       },
     },
 
@@ -350,8 +358,10 @@ export const cups: TarotCard[] = [
         advice: "익숙한 방식만 고집하지 마세요.",
       },
       mind: {
-        meaning: "답답함이 풀리고 다시 움직이고 싶어집니다.",
-        advice: "생각보다 행동이 해답입니다.",
+        meaning:
+          "답답했던 감정의 정체가 풀리고, 다시 외부 세계와 소통하며 움직이고 싶은 의지가 살아납니다.",
+        advice:
+          "가벼운 명상으로 마음을 먼저 정돈해보세요. 어느 정도 생각이 정리되었다면, 그 뒤에 따르는 '행동'이 당신의 가장 확실한 해답이 될 것입니다.",
       },
       relation: {
         meaning: "닫혔던 마음이 열리며 관계가 회복됩니다.",
@@ -411,8 +421,8 @@ export const cups: TarotCard[] = [
         advice: "스스로를 너무 몰아세우지 마세요.",
       },
       relation: {
-        meaning: "서운한 인간관계 이슈.",
-        advice: "회복 가능한 관계를 보세요.",
+        meaning: "실망감으로 인한 관계 단절 이슈.",
+        advice: "서운함을 표현하기 전에 자신의 마음을 먼저 다독이세요.",
       },
       health: {
         meaning: "감정 스트레스 주의.",
@@ -438,8 +448,10 @@ export const cups: TarotCard[] = [
         advice: "다시 도전하면 결과가 달라집니다.",
       },
       money: {
-        meaning: "손실 회복 가능성이 생깁니다.",
-        advice: "감정 대응보다 현실 관리가 중요합니다.",
+        meaning:
+          "손실이 멈추고 예상치 못한 곳에서 작은 보상이나 수입이 생길 수 있습니다.",
+        advice:
+          "지나간 지출에 연연하기보다 남은 자금을 어떻게 굴릴지 고민할 때입니다.",
       },
       mind: {
         meaning: "우울감에서 벗어나 희망이 돌아옵니다.",
@@ -470,7 +482,7 @@ export const cups: TarotCard[] = [
     englishName: "Six of Cups",
     type: "Cups",
     number: 6,
-    keywords: ["향수", "추억", "재회", "순수함"],
+    keywords: ["향수", "추억", "재회", "순수함", "선물", "유산"],
     reversedKeywords: ["과거 집착", "미련", "성장 필요", "현재 외면"],
     image: "/images/Cups/Cups06.webp",
 
@@ -491,8 +503,10 @@ export const cups: TarotCard[] = [
         advice: "진심 어린 태도가 중요합니다.",
       },
       career: {
-        meaning: "과거 경험이 현재 성과로 이어집니다.",
-        advice: "익힌 기술을 다시 활용하세요.",
+        meaning:
+          "과거의 경력이나 예전 인연이 새로운 기회의 징검다리가 되어줍니다.",
+        advice:
+          "이전 직장 동료나 지인에게 안부를 전해 보세요. 기분 좋은 소식이 들려올 수 있습니다.",
       },
       money: {
         meaning: "예전 인연이나 경험에서 기회가 옵니다.",
@@ -562,7 +576,7 @@ export const cups: TarotCard[] = [
     englishName: "Seven of Cups",
     type: "Cups",
     number: 7,
-    keywords: ["환상", "혼란", "선택지", "유혹"],
+    keywords: ["환상", "혼란", "선택지", "유혹", "중독", "백일몽"],
     reversedKeywords: ["현실 직시", "선택 확정", "집중", "판단 회복"],
     image: "/images/Cups/Cups07.webp",
 
@@ -584,8 +598,9 @@ export const cups: TarotCard[] = [
         advice: "겉모습보다 진정성을 보세요.",
       },
       career: {
-        meaning: "방향이 너무 많아 집중이 어렵습니다.",
-        advice: "하나를 정해 몰입하세요.",
+        meaning: "아이디어는 많으나 구체적인 실행 계획이 부족해 보입니다.",
+        advice:
+          "상상력을 발휘하되, 오늘 당장 실천 가능한 '하나'부터 선택해 몰입하세요.",
       },
       money: {
         meaning: "달콤한 제안 주의.",
@@ -635,7 +650,8 @@ export const cups: TarotCard[] = [
         advice: "에너지 소모 관계는 줄이세요.",
       },
       health: {
-        meaning: "흐트러진 생활이 다시 안정됩니다.",
+        meaning:
+          "정신적 혼란이 걷히고 심리적 안정 및 흐트러진 생활이 다시 안정됩니다.",
         advice: "기본 루틴부터 회복하세요.",
       },
       future: {
@@ -672,16 +688,23 @@ export const cups: TarotCard[] = [
 
     categoryInterpretations: {
       love: {
-        meaning: "식은 관계를 떠나 새 길을 찾습니다.",
-        advice: "억지 관계는 놓아주세요.",
+        meaning:
+          "익숙한 관계에 회의감이 들거나, 더 깊은 정서적 성장을 위해 현재의 관계에서 한 발짝 물러나고 싶어지는 시기입니다.",
+
+        advice:
+          "서로를 위해 잠시 거리를 두는 시간을 가져보세요. 이 공백이 두 사람의 성장에 중요한 계기가 될 것입니다.",
       },
       career: {
-        meaning: "이직·환경 변화 운.",
-        advice: "더 나은 방향을 찾으세요.",
+        meaning:
+          "진행 중이던 프로젝트가 중단되거나, 본인의 의사에 따라 다른 부서로의 전환, 혹은 이직 등 환경의 큰 변화가 예상됩니다.",
+        advice:
+          "지금의 자리에 안주하기보다 더 나은 비전을 제시하는 곳으로 과감히 시선을 돌리세요.",
       },
       money: {
-        meaning: "비효율 지출 구조 정리.",
-        advice: "불필요한 것을 끊으세요.",
+        meaning:
+          "수익이 나지 않는 투자처나 비효율적인 지출 구조를 정리해야 하는 시점입니다.",
+        advice:
+          "손실이 아까워 붙잡고 있기보다는, 더 큰 미래를 위해 '손절'과 '정리'를 택하는 과감함이 필요합니다.",
       },
       mind: {
         meaning: "성장을 위한 결단 시기.",
@@ -692,8 +715,10 @@ export const cups: TarotCard[] = [
         advice: "에너지 소모 관계를 정리하세요.",
       },
       health: {
-        meaning: "생활습관 개선 적기.",
-        advice: "나쁜 패턴을 떠나세요.",
+        meaning:
+          "반복되는 일상 속에서 쌓인 피로와 스트레스로 인해 에너지가 고갈된 상태입니다.",
+        advice:
+          "온천, 가벼운 산책, 혹은 짧은 여행처럼 물리적인 환경을 바꿔주는 힐링이 필요합니다. 익숙한 공간을 벗어나는 것만으로도 큰 회복이 됩니다.",
       },
       future: {
         meaning: "새로운 길이 열립니다.",
@@ -719,8 +744,10 @@ export const cups: TarotCard[] = [
         advice: "작은 지출부터 정리하세요.",
       },
       mind: {
-        meaning: "떠날지 남을지 고민이 길어집니다.",
-        advice: "결정 지연이 더 큰 피로를 만듭니다.",
+        meaning:
+          "떠나야 할 때임을 직감하면서도 미련과 두려움에 마음이 정착하지 못하고 방황합니다.",
+        advice:
+          "결정을 지연시키는 것이 가장 큰 피로를 유발합니다. 이제는 과거가 아닌 앞을 보아야 할 때입니다.",
       },
       relation: {
         meaning: "정리해야 할 관계를 계속 끌 수 있습니다.",
@@ -747,7 +774,7 @@ export const cups: TarotCard[] = [
     englishName: "Nine of Cups",
     type: "Cups",
     number: 9,
-    keywords: ["만족", "소원성취", "풍요", "행복"],
+    keywords: ["만족", "소원성취", "풍요", "행복", "자부심", "성취감"],
     reversedKeywords: ["허전함", "과욕", "겉만 만족", "불만족"],
     image: "/images/Cups/Cups09.webp",
 
@@ -756,7 +783,7 @@ export const cups: TarotCard[] = [
 
     reversedMeaning:
       "겉으로는 채워진 듯 보여도 마음 깊은 곳의 허전함이나 과욕이 남아 있을 수 있습니다.",
-    reversedAdvice: "더 많이 갖는 것보다 이미 가진 것의 가치를 느껴보세요.",
+    reversedAdvice: "나의 성공이 누군가에게 상처가 되지는 않는지 살피세요.",
 
     shortMeaning: "소원 성취의 카드",
     yesNo: "Yes",
@@ -776,16 +803,20 @@ export const cups: TarotCard[] = [
         advice: "과소비만 주의하세요.",
       },
       mind: {
-        meaning: "심리적 풍요와 안정.",
-        advice: "감사하는 마음을 가지세요.",
+        meaning:
+          "물질적으로 풍요로워도 내면의 정서적 교감이 부족해 외로움을 느낄 수 있습니다.",
+        advice:
+          "혼자만의 성취보다 소중한 사람들과 기쁨을 나눌 때 진짜 만족이 완성됩니다.",
       },
       relation: {
         meaning: "사람들과 즐거운 관계 흐름.",
         advice: "좋은 에너지를 나누세요.",
       },
       health: {
-        meaning: "컨디션 회복과 안정.",
-        advice: "좋은 루틴을 유지하세요.",
+        meaning:
+          "몸과 마음이 안정을 되찾고 활력이 넘치며, 스스로의 컨디션에 매우 만족하게 되는 시기입니다.",
+        advice:
+          "풍요로움이 지나쳐 영양 과잉이나 체중 증가로 이어질 수 있습니다. 즐거운 식사도 좋지만 적절한 조절이 필요합니다.",
       },
       future: {
         meaning: "바라던 일이 성사될 가능성 높음.",
@@ -811,8 +842,10 @@ export const cups: TarotCard[] = [
         advice: "소유보다 관리가 중요합니다.",
       },
       mind: {
-        meaning: "채워도 허전한 감정이 생길 수 있습니다.",
-        advice: "외부 인정 말고 내면 만족을 찾으세요.",
+        meaning:
+          "표면적인 성공에 취해 내면의 공허함을 외면하거나, 지나친 우월감에 빠질 위험이 있습니다.",
+        advice:
+          "나의 성공이 누군가에게 상처가 되지는 않는지 주변을 살피세요. 진정한 만족은 타인과 함께 나눌 때 완성됩니다.",
       },
       relation: {
         meaning: "즐거워 보여도 진심 어린 연결이 부족할 수 있습니다.",
@@ -861,7 +894,7 @@ export const cups: TarotCard[] = [
         advice: "현재 관계를 미래 관점으로 보세요.",
       },
       career: {
-        meaning: "팀워크와 조직운이 좋습니다.",
+        meaning: "장기적인 파트너십이나 가족같은 끈끈한 조직문화가 좋습니다.",
         advice: "함께 성장하는 방식을 택하세요.",
       },
       money: {
@@ -920,8 +953,10 @@ export const cups: TarotCard[] = [
         advice: "기반을 다지면 안정이 따라옵니다.",
       },
       choice: {
-        meaning: "겉보기 완벽한 선택이 꼭 행복을 주진 않을 수 있습니다.",
-        advice: "체면보다 진짜 만족을 보세요.",
+        meaning:
+          "타인의 시선이나 가족의 기대에 맞춘 선택일 수 있어 진정한 만족이 어려울 수 있습니다.",
+        advice:
+          "내가 정말 원하는 행복인지, 아니면 완벽해 보이고 싶어 하는 욕심인지 구분해야 합니다.",
       },
     },
   },
@@ -932,7 +967,7 @@ export const cups: TarotCard[] = [
     englishName: "Page of Cups",
     type: "Cups",
     number: 11,
-    keywords: ["호기심", "감성", "직관", "새 소식"],
+    keywords: ["호기심", "감성", "예술적 영감", "새 소식"],
     reversedKeywords: ["감정 미성숙", "예민함", "헛기대", "소식 지연"],
     image: "/images/Cups/Cups11_Page.webp",
 
@@ -988,8 +1023,10 @@ export const cups: TarotCard[] = [
         advice: "상상보다 실제 행동을 보세요.",
       },
       career: {
-        meaning: "좋은 아이디어가 실행 부족으로 묻힐 수 있습니다.",
-        advice: "기록 후 바로 작은 실행을 하세요.",
+        meaning:
+          "창의적이지만 비현실적인 계획으로 인해 실행 단계에서 차질이 생길 수 있습니다.",
+        advice:
+          "아이디어는 좋으나 디테일이 부족합니다. 현실적인 수치와 기한을 정해 다시 검토하세요.",
       },
       money: {
         meaning: "감성 소비나 충동 지출 주의.",
@@ -1049,8 +1086,8 @@ export const cups: TarotCard[] = [
         advice: "부드러운 설득이 통합니다.",
       },
       money: {
-        meaning: "감성 콘텐츠·브랜딩 수익운.",
-        advice: "감각을 가치로 바꾸세요.",
+        meaning: "귀인의 도움, 감성적인 투자 제안",
+        advice: "도움을 주는 사람의 손길을 기쁘게 받으세요.",
       },
       mind: {
         meaning: "사랑받고 싶은 마음이 커집니다.",
@@ -1076,8 +1113,10 @@ export const cups: TarotCard[] = [
 
     reversedCategoryInterpretations: {
       love: {
-        meaning: "달콤한 말은 많지만 진심 확인이 필요합니다.",
-        advice: "로맨스보다 일관성을 보세요.",
+        meaning:
+          "달콤한 로맨스에 눈이 멀어 상대의 단점이나 무책임한 면을 보지 못할 수 있습니다.",
+        advice:
+          "상대의 말보다는 일관된 태도를 보세요. 감정에 취하기보다 시간을 두고 지켜봐야 합니다.",
       },
       career: {
         meaning: "좋은 제안처럼 보여도 구체성이 부족할 수 있습니다.",
@@ -1116,7 +1155,7 @@ export const cups: TarotCard[] = [
     englishName: "Queen of Cups",
     type: "Cups",
     number: 13,
-    keywords: ["자애", "직관", "공감", "치유"],
+    keywords: ["자애", "직관", "공감", "치유", "현모양처", "예술적 감각"],
     reversedKeywords: ["감정 소진", "예민함", "의존", "혼란"],
     image: "/images/Cups/Cups13_Queen.webp",
 
@@ -1186,7 +1225,7 @@ export const cups: TarotCard[] = [
       },
       relation: {
         meaning: "퍼주기만 하는 관계로 지칠 수 있습니다.",
-        advice: "주고받는 균형을 점검하세요.",
+        advice: "상대에게 감정적으로 지나치게 의존하거나 통제하려 할 수 있음.",
       },
       health: {
         meaning: "스트레스성 피로, 감정 소진 주의.",
@@ -1197,8 +1236,10 @@ export const cups: TarotCard[] = [
         advice: "타인보다 자신을 돌보는 선택이 미래를 살립니다.",
       },
       choice: {
-        meaning: "겉으로 착한 선택보다 나를 지키는 선택이 필요합니다.",
-        advice: "죄책감 때문에 결정하지 마세요.",
+        meaning:
+          "거절하지 못하는 마음이나 죄책감 때문에 나에게 해로운 선택을 할 수 있습니다.",
+        advice:
+          "착한 사람이 되기보다 나를 먼저 지키는 사람이 되세요. 거절도 용기입니다.",
       },
     },
   },
@@ -1232,7 +1273,8 @@ export const cups: TarotCard[] = [
       },
       career: {
         meaning: "리더십과 중재 능력이 빛납니다.",
-        advice: "차분하게 판단하세요.",
+        advice:
+          "상하관계 사이에서 갈등을 해결하는 역할이기에 차분하게 판단하세요.",
       },
       money: {
         meaning: "안정적인 자산 운영 능력.",
@@ -1270,8 +1312,10 @@ export const cups: TarotCard[] = [
         advice: "통제보다 소통이 성과를 만듭니다.",
       },
       money: {
-        meaning: "감정 상태에 따라 소비 패턴이 흔들릴 수 있습니다.",
-        advice: "기분 따라 쓰지 말고 원칙을 세우세요.",
+        meaning:
+          "친분 관계를 앞세운 제안에 흔들려 재정적 손실을 볼 위험이 있습니다.",
+        advice:
+          "돈 문제는 감정이 섞이면 안 됩니다. 지인과의 거래일수록 냉정하게 수치를 따지세요.",
       },
       mind: {
         meaning: "감정을 눌러 담아 내면 압박이 커질 수 있습니다.",
@@ -1282,8 +1326,10 @@ export const cups: TarotCard[] = [
         advice: "진심을 말과 행동으로 보여주세요.",
       },
       health: {
-        meaning: "스트레스 누적, 혈압·긴장 관리가 필요합니다.",
-        advice: "감정 해소 루틴을 만드세요.",
+        meaning:
+          "감정을 억눌러 생기는 스트레스성 질환이나 심리적 압박이 건강을 해칠 수 있습니다.",
+        advice:
+          "괜찮은 척 참기보다 감정을 분출할 수 있는 취미나 상담을 통해 내면의 압력을 낮추세요.",
       },
       future: {
         meaning: "좋은 능력은 있지만 감정 균형이 성패를 좌우합니다.",

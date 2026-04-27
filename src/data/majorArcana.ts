@@ -8,7 +8,7 @@ export const majorArcana: TarotCard[] = [
     type: "Major",
     number: 0,
     keywords: ["시작", "자유", "도전", "순수"],
-    reversedKeywords: ["충동", "무모함", "준비 부족", "방향 상실"],
+    reversedKeywords: ["충동", "무책임", "준비 부족", "방향 상실", "낙관주의"],
     image: "/images/Major/00_Fool.webp",
     meaning: "새로운 시작과 자유로운 가능성을 뜻하는 카드.",
     advice: "완벽한 준비를 기다리기보다 첫걸음을 내딛으세요.",
@@ -67,7 +67,7 @@ export const majorArcana: TarotCard[] = [
         advice: "시작 전 계획과 정보 정리가 필요합니다.",
       },
       money: {
-        meaning: "충동 소비나 무리한 투자 위험이 있습니다.",
+        meaning: "예상치 못한 지출(충동구매)이나 무리한 투자 위험이 있습니다.",
         advice: "당장의 욕심보다 안정성을 우선하세요.",
       },
       mind: {
@@ -100,7 +100,7 @@ export const majorArcana: TarotCard[] = [
     type: "Major",
     number: 1,
     keywords: ["능력", "실현", "집중", "창조"],
-    reversedKeywords: ["속임수", "분산", "자신감 부족", "미활용"],
+    reversedKeywords: ["속임수", "허풍", "자신감 부족", "준비되지 않는 기술"],
     image: "/images/Major/01_Magician.webp",
     meaning: "능력과 자원을 활용해 현실을 만들어내는 카드.",
     advice: "이미 가진 재능을 믿고 직접 행동하세요.",
@@ -115,7 +115,8 @@ export const majorArcana: TarotCard[] = [
 
     categoryInterpretations: {
       love: {
-        meaning: "상대에게 강하게 어필되는 시기.",
+        meaning:
+          "매력적인 대화나 자신감 있는 태도로 상대에게 강하게 어필되는 시기.",
         advice: "주도적으로 다가가면 결과가 좋습니다.",
       },
       career: {
@@ -207,8 +208,8 @@ export const majorArcana: TarotCard[] = [
 
     categoryInterpretations: {
       love: {
-        meaning: "숨겨진 감정이 존재합니다.",
-        advice: "서두르지 말고 상대 속도를 보세요.",
+        meaning: "서로를 탐색하는 단계, 정신적인 교감이 강한 시기.",
+        advice: "조급한 고백보다는 신비로운 매력을 유지하며 천천히 다가가세요.",
       },
       career: {
         meaning: "겉보다 내부 정보가 중요합니다.",
@@ -227,7 +228,7 @@ export const majorArcana: TarotCard[] = [
         advice: "침묵 속 의미를 읽어보세요.",
       },
       health: {
-        meaning: "스트레스성 피로 가능성.",
+        meaning: "스트레스성 피로 가능성(여성질환, 호르몬 등).",
         advice: "휴식과 수면 관리가 중요합니다.",
       },
       future: {
@@ -281,7 +282,7 @@ export const majorArcana: TarotCard[] = [
     englishName: "The Empress",
     type: "Major",
     number: 3,
-    keywords: ["풍요", "매력", "성장", "안정"],
+    keywords: ["풍요", "매력", "성장", "결실", "창의성"],
     reversedKeywords: ["의존", "과보호", "정체", "과소비"],
     image: "/images/Major/03_Empress.webp",
     meaning: "풍요와 성장을 상징하는 카드.",
@@ -373,7 +374,7 @@ export const majorArcana: TarotCard[] = [
     type: "Major",
     number: 4,
     keywords: ["권위", "통제", "리더십", "안정"],
-    reversedKeywords: ["독단", "통제 과함", "경직", "불안정"],
+    reversedKeywords: ["독단", "통제 과함", "경직", "무책임", "허세"],
     image: "/images/Major/04_Emperor.webp",
     meaning: "질서와 책임감으로 성취를 이루는 카드.",
     advice: "원칙을 세우고 흔들림 없이 추진하세요.",
@@ -405,7 +406,7 @@ export const majorArcana: TarotCard[] = [
       },
       relation: {
         meaning: "영향력 있는 위치.",
-        advice: "강함 속 배려도 필요합니다.",
+        advice: "말보다는 행동(책임감)으로 신뢰를 얻으세요.",
       },
       health: {
         meaning: "기초 체력 안정.",
@@ -427,7 +428,7 @@ export const majorArcana: TarotCard[] = [
         advice: "이기려 하지 말고 이해하려 하세요.",
       },
       career: {
-        meaning: "권위 충돌이나 조직 스트레스 가능성.",
+        meaning: "권위 충돌 및 무능력한 리더십으로 조직 스트레스 가능성.",
         advice: "독단보다 협업 능력을 보여주세요.",
       },
       money: {
@@ -439,8 +440,8 @@ export const majorArcana: TarotCard[] = [
         advice: "모든 것을 통제하려 하지 마세요.",
       },
       relation: {
-        meaning: "강압적 태도로 거리감이 생길 수 있습니다.",
-        advice: "부드러운 소통을 연습하세요.",
+        meaning: "강압적 태도나 고집으로 주변 사람들이 떠나갈 수 있습니다.",
+        advice: "내 기준을 강요하기보다 상대의 입장도 경청해 보세요.",
       },
       health: {
         meaning: "긴장 누적으로 몸이 굳을 수 있습니다.",
@@ -479,8 +480,9 @@ export const majorArcana: TarotCard[] = [
 
     categoryInterpretations: {
       love: {
-        meaning: "진지하고 안정적인 관계.",
-        advice: "신뢰를 쌓는 대화가 중요합니다.",
+        meaning:
+          "신뢰를 바탕으로 한 진지한 만남. 주변의 도움이나 소개운이 있습니다.",
+        advice: "예의를 갖추고 천천히 서로의 가치관을 확인하세요.",
       },
       career: {
         meaning: "멘토, 교육, 조직운 상승.",
@@ -539,7 +541,7 @@ export const majorArcana: TarotCard[] = [
       },
       future: {
         meaning: "기존 방식만 고수하면 발전이 느릴 수 있습니다.",
-        advice: "새로운 배움을 받아들이세요.",
+        advice: "맹목적인 믿음을 경계하세요",
       },
       choice: {
         meaning: "남들이 맞다는 길이 내 답은 아닐 수 있습니다.",
@@ -554,7 +556,7 @@ export const majorArcana: TarotCard[] = [
     type: "Major",
     number: 6,
     keywords: ["사랑", "선택", "조화", "연결"],
-    reversedKeywords: ["갈등", "불일치", "유혹", "선택 장애"],
+    reversedKeywords: ["갈등", "불일치", "유혹", "결정 장애", "우유부단"],
     image: "/images/Major/06_Lovers.webp",
     meaning: "관계와 중요한 선택의 순간을 뜻하는 카드.",
     advice: "타협보다 진심이 향하는 방향을 선택하세요.",
@@ -577,8 +579,10 @@ export const majorArcana: TarotCard[] = [
         advice: "혼자보다 함께 가세요.",
       },
       money: {
-        meaning: "파트너십 재물운.",
-        advice: "공동 프로젝트가 유리합니다.",
+        meaning:
+          "협력을 통한 수익 발생과 동시에, 감정에 치우친 즉흥적 소비가 공존하는 시기입니다.",
+        advice:
+          "공동 투자나 협업은 길하나, 기분에 휩쓸린 지출은 자제하고 계획적인 예산 집행이 필요합니다.",
       },
       mind: {
         meaning: "갈등과 선택 고민.",
@@ -632,8 +636,10 @@ export const majorArcana: TarotCard[] = [
         advice: "억지 결정 말고 정리 후 선택하세요.",
       },
       choice: {
-        meaning: "둘 다 잡으려다 놓칠 수 있습니다.",
-        advice: "하나를 선택하면 하나는 내려놓아야 합니다.",
+        meaning:
+          "선택의 기로에서 우유부단함으로 인해 최적의 타이밍을 놓치거나 잘못된 판단을 내릴 수 있습니다.",
+        advice:
+          "완벽한 선택을 기다리다 기회를 날리지 마세요. 결정을 미루는 것 자체가 현재 당신에게 가장 큰 리스크입니다.",
       },
     },
   },
@@ -712,11 +718,11 @@ export const majorArcana: TarotCard[] = [
       },
       relation: {
         meaning: "독주 이미지로 주변과 거리감이 생길 수 있습니다.",
-        advice: "함께 가는 방식도 고민하세요.",
+        advice: "상대를 이기려 하기보다 같은 목표를 보고 있는지 확인하세요.",
       },
       health: {
-        meaning: "과로, 무리한 활동으로 피로 누적 가능성.",
-        advice: "휴식 없는 전진은 오래 못 갑니다.",
+        meaning: "과로로 인한 면역력 저하나 이동 중 갑작스러운 부상 주의.",
+        advice: "속도를 줄이고 안전과 휴식을 최우선으로 하세요.",
       },
       future: {
         meaning: "전진은 하나 예상보다 늦어질 수 있습니다.",
@@ -735,8 +741,8 @@ export const majorArcana: TarotCard[] = [
     englishName: "Strength",
     type: "Major",
     number: 8,
-    keywords: ["용기", "인내", "부드러운 통제", "불굴의 의지"],
-    reversedKeywords: ["자신감 부족", "감정 폭발", "지침", "불안"],
+    keywords: ["용기", "인내", "부드러운 통제", "불굴의 의지", "포용력"],
+    reversedKeywords: ["자신감 부족", "감정 폭발", "지침", "불안", "열정 고갈"],
     image: "/images/Major/08_Strength.webp",
     meaning: "내면의 힘과 인내로 상황을 극복하는 카드.",
     advice: "강압보다 부드러움과 꾸준함으로 해결하세요.",
@@ -751,8 +757,9 @@ export const majorArcana: TarotCard[] = [
 
     categoryInterpretations: {
       love: {
-        meaning: "어려움을 넘기며 더 단단해지는 사랑입니다.",
-        advice: "통제보다 이해와 인내가 중요합니다.",
+        meaning: "인내와 포용으로 관계를 주도하는 시기.",
+        advice:
+          "감정적으로 맞서기보다 부드럽게 설득하는 것이 훨씬 효과적입니다.",
       },
       career: {
         meaning: "까다로운 업무도 결국 해결합니다.",
@@ -826,7 +833,7 @@ export const majorArcana: TarotCard[] = [
     englishName: "The Hermit",
     type: "Major",
     number: 9,
-    keywords: ["성찰", "고독", "탐구", "내면의 인도"],
+    keywords: ["성찰", "고독", "탐구", "내면의 인도", "전문성"],
     reversedKeywords: ["고립", "외로움", "폐쇄", "길 잃음"],
     image: "/images/Major/09_Hermit.webp",
     meaning: "혼자만의 성찰을 통해 답을 찾는 카드.",
@@ -847,8 +854,9 @@ export const majorArcana: TarotCard[] = [
         advice: "억지 관계보다 자기 이해가 먼저입니다.",
       },
       career: {
-        meaning: "실력 축적과 연구에 좋은 시기입니다.",
-        advice: "조용히 내실을 다지세요.",
+        meaning: "깊이 있는 연구나 전문 지식을 쌓기에 최적의 시기입니다.",
+        advice:
+          "드러내기보다 실력을 다지고, 필요하다면 멘토의 지혜를 빌리세요.",
       },
       money: {
         meaning: "지출 절제 흐름입니다.",
@@ -919,7 +927,13 @@ export const majorArcana: TarotCard[] = [
     type: "Major",
     number: 10,
     keywords: ["변화", "운명", "기회", "터닝포인트"],
-    reversedKeywords: ["지연", "반복", "악순환", "예상 밖 변수"],
+    reversedKeywords: [
+      "지연",
+      "반복",
+      "악순환",
+      "예상 밖 변수",
+      "부적절한 타이밍",
+    ],
     image: "/images/Major/10_Wheel_of_Fortune.webp",
     meaning: "피할 수 없는 변화와 기회의 흐름을 뜻하는 카드.",
     advice: "흐름이 바뀔 때는 유연하게 올라타세요.",
@@ -951,7 +965,7 @@ export const majorArcana: TarotCard[] = [
         advice: "좋은 때와 나쁜 때는 지나갑니다.",
       },
       relation: {
-        meaning: "옛 인연 재회 가능성.",
+        meaning: "옛 인연 재회 가능성 또는 우연한 만남.",
         advice: "모든 인연엔 타이밍이 있습니다.",
       },
       health: {
@@ -978,8 +992,9 @@ export const majorArcana: TarotCard[] = [
         advice: "플랜B를 준비한 사람이 결국 웃습니다.",
       },
       money: {
-        meaning: "수입 변동, 예상 밖 지출 가능성이 있습니다.",
-        advice: "불안할수록 현금 흐름 관리가 힘이 됩니다.",
+        meaning:
+          "자금 흐름이 정체되거나 예상치 못한 변수로 지출이 생길 수 있습니다.",
+        advice: "무리한 투자는 금물이며, 현금을 확보하여 유동성에 대비하세요.",
       },
       mind: {
         meaning: "왜 나만 제자리인가 싶은 답답함이 커질 수 있습니다.",
@@ -1027,8 +1042,8 @@ export const majorArcana: TarotCard[] = [
 
     categoryInterpretations: {
       love: {
-        meaning: "관계의 균형을 다시 맞추는 시기입니다.",
-        advice: "감정싸움보다 솔직한 대화가 필요합니다.",
+        meaning: "감정보다 신뢰와 조건, 균형이 중요한 관계입니다.",
+        advice: "서로에게 요구하는 바를 명확히 하고 공정한 태도를 유지하세요.",
       },
       career: {
         meaning: "노력한 만큼 평가받습니다.",
@@ -1120,7 +1135,7 @@ export const majorArcana: TarotCard[] = [
     categoryInterpretations: {
       love: {
         meaning: "관계가 정체되거나 기다림이 필요합니다.",
-        advice: "강요보다 이해가 먼저입니다.",
+        advice: "자신의 마음을 먼저 돌보며 기다리세요.",
       },
       career: {
         meaning: "진행이 느리지만 준비 기간입니다.",
@@ -1139,8 +1154,9 @@ export const majorArcana: TarotCard[] = [
         advice: "즉시 반응하지 마세요.",
       },
       health: {
-        meaning: "무기력감 주의.",
-        advice: "가벼운 스트레칭이 좋습니다.",
+        meaning:
+          "활동량 저하로 인한 무기력감이나 혈액순환 문제가 생길 수 있습니다.",
+        advice: "거꾸로 서기나 가벼운 스트레칭으로 몸의 순환을 도와주세요.",
       },
       future: {
         meaning: "늦어 보여도 필요한 과정입니다.",
@@ -1194,7 +1210,7 @@ export const majorArcana: TarotCard[] = [
     englishName: "Death",
     type: "Major",
     number: 13,
-    keywords: ["끝", "변화", "재탄생", "정리"],
+    keywords: ["끝", "변화", "재탄생", "정리", "숙명적 변화"],
     reversedKeywords: ["변화 거부", "미련", "정체", "끝맺음 지연"],
     image: "/images/Major/13_Death.webp",
     meaning: "끝남과 동시에 새로운 시작을 뜻하는 카드.",
@@ -1215,8 +1231,9 @@ export const majorArcana: TarotCard[] = [
         advice: "억지 인연은 놓아주세요.",
       },
       career: {
-        meaning: "이직·프로젝트 종료 가능성.",
-        advice: "마무리를 깔끔히 하세요.",
+        meaning: "현재 맡은 프로젝트의 종료나 직업적인 큰 전환점을 맞이합니다.",
+        advice:
+          "과거의 방식에 연연하지 말고, 완전히 새로운 판을 짠다는 마음으로 임하세요.",
       },
       money: {
         meaning: "재정 구조 개편 시기.",
@@ -1307,7 +1324,7 @@ export const majorArcana: TarotCard[] = [
       },
       career: {
         meaning: "협업이 잘 풀립니다.",
-        advice: "중재자 역할이 빛납니다.",
+        advice: "해외 업무나 다른 부서와의 협업과 같은 중재자 역할이 빛납니다.",
       },
       money: {
         meaning: "수입·지출 균형이 좋아집니다.",
@@ -1345,8 +1362,9 @@ export const majorArcana: TarotCard[] = [
         advice: "업무 분배를 다시 조정하세요.",
       },
       money: {
-        meaning: "과소비 또는 지나친 절약으로 치우칠 수 있습니다.",
-        advice: "지속 가능한 소비 패턴을 만드세요.",
+        meaning:
+          "수입과 지출의 균형이 깨져 자금 회전이 원활하지 않을 수 있습니다.",
+        advice: "감정적인 소비를 줄이고 지출의 우선순위를 다시 정해야 합니다.",
       },
       mind: {
         meaning: "감정 기복과 조급함이 커질 수 있습니다.",
@@ -1377,7 +1395,7 @@ export const majorArcana: TarotCard[] = [
     englishName: "The Devil",
     type: "Major",
     number: 15,
-    keywords: ["유혹", "집착", "속박", "욕망"],
+    keywords: ["유혹", "집착", "속박", "욕망", "강한 끌림"],
     reversedKeywords: ["해방", "각성", "중독 탈출", "관계 정리"],
     image: "/images/Major/15_Devil.webp",
     meaning: "욕망과 집착, 끊기 어려운 관계를 뜻하는 카드.",
@@ -1398,11 +1416,12 @@ export const majorArcana: TarotCard[] = [
         advice: "집착인지 사랑인지 구분하세요.",
       },
       career: {
-        meaning: "성과 압박이 강할 수 있습니다.",
-        advice: "편법 제안은 거절하세요.",
+        meaning: "강한 성과 욕심이나 불합리한 조직 문화에 얽매일 수 있습니다.",
+        advice:
+          "일과 삶의 균형을 점검하고, 나를 소모시키는 유혹(편법 등)을 경계하세요.",
       },
       money: {
-        meaning: "과소비·욕심 주의.",
+        meaning: "도박, 무리한 대출 등의 과소비·욕심 주의.",
         advice: "단기 고수익 유혹을 피하세요.",
       },
       mind: {
@@ -1505,8 +1524,8 @@ export const majorArcana: TarotCard[] = [
         advice: "감정 폭발보다 거리 두기가 필요합니다.",
       },
       health: {
-        meaning: "과로·사고 주의.",
-        advice: "무리한 일정은 줄이세요.",
+        meaning: "갑작스러운 컨디션 난조나 예상치 못한 부상의 위험이 있습니다.",
+        advice: "무리한 활동을 자제하고 안전과 휴식을 최우선으로 챙기세요.",
       },
       future: {
         meaning: "큰 변화 후 더 나은 기반이 생깁니다.",
@@ -1560,7 +1579,7 @@ export const majorArcana: TarotCard[] = [
     englishName: "The Star",
     type: "Major",
     number: 17,
-    keywords: ["희망", "치유", "영감", "미래"],
+    keywords: ["희망", "치유", "영감", "미래", "예술성"],
     reversedKeywords: ["실망", "불신", "의욕 저하", "희망 상실"],
     image: "/images/Major/17_Star.webp",
     meaning: "희망과 회복, 밝은 미래를 뜻하는 카드.",
@@ -1585,7 +1604,7 @@ export const majorArcana: TarotCard[] = [
         advice: "꿈꾸던 방향을 실행하세요.",
       },
       money: {
-        meaning: "점진적 회복운.",
+        meaning: "재정적 압박으로부터의 해방.",
         advice: "장기 계획이 유리합니다.",
       },
       mind: {
@@ -1620,8 +1639,8 @@ export const majorArcana: TarotCard[] = [
         advice: "처음 시작한 이유를 다시 떠올리세요.",
       },
       money: {
-        meaning: "회복이 예상보다 늦어질 수 있습니다.",
-        advice: "속도보다 꾸준함이 재정 회복의 핵심입니다.",
+        meaning: "수입에 대한 막연한 기대감이 실망으로 이어질 수 있습니다.",
+        advice: "희망 섞인 추측보다 정확한 데이터로 자금을 관리하세요.",
       },
       mind: {
         meaning: "우울감, 자신감 저하가 올 수 있습니다.",
@@ -1652,58 +1671,7 @@ export const majorArcana: TarotCard[] = [
     englishName: "The Moon",
     type: "Major",
     number: 18,
-    keywords: ["불안", "환상", "직감", "모호함"],
-    image: "/images/Major/18_Moon.webp",
-    meaning: "불확실함과 감정의 흔들림을 뜻하는 카드.",
-    advice: "두려움에 휘둘리지 말고 사실을 확인하세요.",
-
-    shortMeaning: "안개 속 직감의 카드",
-    yesNo: "Maybe",
-    powerScore: 84,
-
-    categoryInterpretations: {
-      love: {
-        meaning: "상대 속마음이 अस्पष्ट할 수 있습니다.",
-        advice: "추측보다 대화가 필요합니다.",
-      },
-      career: {
-        meaning: "방향성이 흐릴 수 있습니다.",
-        advice: "중요 결정은 신중히 하세요.",
-      },
-      money: {
-        meaning: "불확실한 투자 주의.",
-        advice: "검증되지 않은 제안은 피하세요.",
-      },
-      mind: {
-        meaning: "예민함과 불안감 상승.",
-        advice: "휴식과 감정 정리가 필요합니다.",
-      },
-      relation: {
-        meaning: "오해가 생기기 쉽습니다.",
-        advice: "소문보다 사실을 보세요.",
-      },
-      health: {
-        meaning: "수면·스트레스 관리 필요.",
-        advice: "생활 패턴을 안정시키세요.",
-      },
-      future: {
-        meaning: "아직 안개가 걷히지 않았습니다.",
-        advice: "시간을 두고 지켜보세요.",
-      },
-      choice: {
-        meaning: "지금 결정은 정보 부족일 수 있습니다.",
-        advice: "조금 더 확인 후 움직이세요.",
-      },
-    },
-  },
-
-  {
-    id: 18,
-    name: "The Moon (달)",
-    englishName: "The Moon",
-    type: "Major",
-    number: 18,
-    keywords: ["불안", "환상", "직감", "모호함"],
+    keywords: ["불안", "환상", "직감", "모호함", "잠재의식"],
     reversedKeywords: ["진실 발견", "불안 해소", "착각 종료", "명확해짐"],
     image: "/images/Major/18_Moon.webp",
     meaning: "불확실함과 감정의 흔들림을 뜻하는 카드.",
@@ -1720,8 +1688,10 @@ export const majorArcana: TarotCard[] = [
 
     categoryInterpretations: {
       love: {
-        meaning: "상대 속마음이 अस्पष्ट할 수 있습니다.",
-        advice: "추측보다 대화가 필요합니다.",
+        meaning:
+          "상대의 속마음이나 관계의 앞날이 불투명하게 느껴질 수 있습니다.",
+        advice:
+          "혼자만의 상상으로 괴로워하기보다, 차분하게 사실을 확인할 시간이 필요합니다.",
       },
       career: {
         meaning: "방향성이 흐릴 수 있습니다.",
@@ -1741,7 +1711,7 @@ export const majorArcana: TarotCard[] = [
       },
       health: {
         meaning: "수면·스트레스 관리 필요.",
-        advice: "생활 패턴을 안정시키세요.",
+        advice: "심리적 안정이 신체 회복의 우선입니다.",
       },
       future: {
         meaning: "아직 안개가 걷히지 않았습니다.",
@@ -1829,11 +1799,13 @@ export const majorArcana: TarotCard[] = [
       },
       relation: {
         meaning: "주변 인기가 높아집니다.",
-        advice: "밝은 태도가 행운을 부릅니다.",
+        advice: "계산 없는 순수한 마음이 관계를 밝게 만듭니다.",
       },
       health: {
-        meaning: "컨디션 매우 좋음.",
-        advice: "야외 활동이 좋습니다.",
+        meaning:
+          "최상의 컨디션과 강력한 생명력을 상징하며, 지쳤던 몸과 마음이 빠르게 회복되는 시기입니다.",
+        advice:
+          "적당한 일광욕과 야외 활동은 보약이 됩니다. 다만, 과한 활동으로 인한 탈수나 열성 질환은 주의가 필요합니다.",
       },
       future: {
         meaning: "원하던 성공이 가까워집니다.",
@@ -1851,8 +1823,10 @@ export const majorArcana: TarotCard[] = [
         advice: "자존심보다 진심 어린 대화를 선택하세요.",
       },
       career: {
-        meaning: "성과가 늦어지거나 기대만큼 인정받지 못할 수 있습니다.",
-        advice: "조급함보다 꾸준함이 결국 평가를 만듭니다.",
+        meaning:
+          "성과는 나오지만 기대치에 미치지 못하거나, 자신의 능력을 과신해 실수가 생길 수 있습니다.",
+        advice:
+          "지금의 성취에 안주하지 말고 구름 뒤의 태양을 기다리듯 내실을 기하세요.",
       },
       money: {
         meaning: "수익 지연, 기대 수입 미달 가능성이 있습니다.",
@@ -1887,7 +1861,7 @@ export const majorArcana: TarotCard[] = [
     englishName: "Judgement",
     type: "Major",
     number: 20,
-    keywords: ["각성", "결단", "부활", "소명"],
+    keywords: ["각성", "결단", "부활", "소명", "보상"],
     reversedKeywords: ["망설임", "후회", "과거 집착", "결단 지연"],
     image: "/images/Major/20_Judgement.webp",
     meaning: "중요한 결단과 새로운 각성을 뜻하는 카드.",
@@ -1911,8 +1885,10 @@ export const majorArcana: TarotCard[] = [
         advice: "온 기회를 잡으세요.",
       },
       money: {
-        meaning: "막혔던 흐름 회복.",
-        advice: "중요한 결정을 미루지 마세요.",
+        meaning:
+          "과거에 묶였던 금전 문제가 해결되거나 정당한 보상을 받게 되는 흐름입니다.",
+        advice:
+          "받아야 할 권리를 확실히 챙기고, 새로운 재정 계획을 세우기에 좋은 시점입니다.",
       },
       mind: {
         meaning: "마음이 깨어나는 시기.",
@@ -1978,7 +1954,7 @@ export const majorArcana: TarotCard[] = [
     englishName: "The World",
     type: "Major",
     number: 21,
-    keywords: ["완성", "성공", "통합", "달성"],
+    keywords: ["완성", "성공", "통합", "달성", "해외", "이동", "확장"],
     reversedKeywords: ["미완성", "지연", "공허함", "마무리 부족"],
     image: "/images/Major/21_World.webp",
     meaning: "목표 달성과 완성을 뜻하는 최고의 카드.",
@@ -1999,8 +1975,10 @@ export const majorArcana: TarotCard[] = [
         advice: "현재 행복을 충분히 누리세요.",
       },
       career: {
-        meaning: "프로젝트 성공·목표 달성.",
-        advice: "성과를 기반으로 다음 목표를 세우세요.",
+        meaning:
+          "현재의 목표를 완벽히 달성하거나, 더 큰 세상(해외, 큰 규모)으로 나갈 기회가 생깁니다.",
+        advice:
+          "하나의 마디가 완성되었습니다. 이 성공을 발판 삼아 더 넓은 무대를 꿈꾸세요.",
       },
       money: {
         meaning: "재정 안정과 성취운.",
@@ -2046,8 +2024,10 @@ export const majorArcana: TarotCard[] = [
         advice: "결과만이 아니라 성장 과정도 인정하세요.",
       },
       relation: {
-        meaning: "좋은 관계 속에서도 거리감이 남을 수 있습니다.",
-        advice: "감사와 애정을 표현하면 빈틈이 메워집니다.",
+        meaning:
+          "전반적으로 조화롭지만, 사소한 오해나 표현 부족으로 2% 부족한 느낌을 받을 수 있습니다.",
+        advice:
+          "익숙함에 속아 소중함을 잊지 마세요. 작은 배려가 관계의 완성도를 높입니다.",
       },
       health: {
         meaning: "거의 회복됐지만 완전한 안정엔 시간이 더 필요합니다.",
