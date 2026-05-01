@@ -11,7 +11,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 
 import { tarotCards } from "../data/tarot";
-import type { TarotCard } from "../types/tarot";
+import type {
+  CategoryKey,
+  TarotCard,
+  TarotInterpretation,
+} from "../types/tarot";
 import type { ResultPageState } from "../types/navigation";
 
 import { STEP } from "../constants/resultStep";
@@ -25,8 +29,9 @@ import useCardAnimation from "../hooks/useCardAnimation";
 import useResultClosing from "../hooks/useResultClosing";
 import useCardTilt from "../hooks/useCardTilt";
 
-import { getResults, saveResults } from "../services/storage";
-import { HistoryItem } from "../types/history";
+import { getResultData } from "../hooks/useResultData";
+import { saveResult } from "../services/resultService";
+import { buildShareText, copyToClipboard } from "../services/shareService";
 
 export type CategoryType =
   | "love"
@@ -48,6 +53,8 @@ const CATEGORY_KEYS = [
   "future",
   "choice",
 ] as const;
+
+type InterpretMap = Partial<Record<CategoryKey, TarotInterpretation>>;
 
 /* =====================================
    Ending Message
@@ -122,39 +129,13 @@ export default function Result() {
    final data (SAFE VERSION)
 ===================================== */
 
-  const safeCategory = CATEGORY_KEYS.includes(category as CategoryType)
-    ? (category as CategoryType)
+  const safeCategory: CategoryKey = CATEGORY_KEYS.includes(
+    category as CategoryKey,
+  )
+    ? (category as CategoryKey)
     : "love";
 
-  const normalSet = card.categoryInterpretations ?? {};
-  const reverseSet = card.reversedCategoryInterpretations ?? {};
-
-  const selectedData = isReversed
-    ? (reverseSet[safeCategory] ?? normalSet[safeCategory])
-    : normalSet[safeCategory];
-
-  const finalMeaning = isReversed
-    ? (card.reversedMeaning ?? card.meaning)
-    : card.meaning;
-
-  const finalAdvice = isReversed
-    ? (card.reversedAdvice ?? card.advice)
-    : card.advice;
-
-  const finalKeywords =
-    isReversed && card.reversedKeywords?.length
-      ? card.reversedKeywords
-      : card.keywords;
-
-  const finalCategoryMeaning = selectedData?.meaning ?? finalMeaning;
-
-  const finalCategoryAdvice = selectedData?.advice ?? finalAdvice;
-
-  const resultData = {
-    meaning: finalCategoryMeaning,
-    advice: finalCategoryAdvice,
-    keywords: finalKeywords,
-  };
+  const resultData = getResultData(card, safeCategory, isReversed);
 
   const endingText =
     ENDING_MESSAGE[safeCategory] ??
@@ -163,18 +144,11 @@ export default function Result() {
   /* =====================================
    save result (FIXED)
 ===================================== */
-  const hasSavedRef = useRef(false);
 
   useEffect(() => {
     if (!state) return;
 
-    const prev = getResults() ?? [];
-
-    const isDuplicate = prev[0]?.content === content;
-
-    if (isDuplicate) return;
-
-    const newItem: HistoryItem = {
+    saveResult({
       id: crypto.randomUUID(),
       card,
       content,
@@ -182,14 +156,25 @@ export default function Result() {
       isReversed,
       date: new Date().toISOString(),
       favorite: false,
-    };
+    });
+  }, [state, card, content, category, isReversed]);
 
-    const MAX = 100;
+  const handleCopy = async () => {
+    try {
+      const text = buildShareText({
+        card,
+        content,
+        meaning: resultData.meaning,
+        advice: resultData.advice,
+        isReversed,
+      });
 
-    saveResults([newItem, ...prev].slice(0, MAX));
-
-    hasSavedRef.current = true;
-  }, [state]);
+      await copyToClipboard(text);
+      showToast("📝 결과 복사 완료");
+    } catch {
+      showToast("복사 실패");
+    }
+  };
 
   /* =====================================
      toast
@@ -218,40 +203,6 @@ export default function Result() {
   /* =====================================
      share functions
   ===================================== */
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-
-      showToast("🔗 링크가 복사되었습니다.");
-    } catch {
-      showToast("복사에 실패했습니다.");
-    }
-  };
-
-  const copyText = async () => {
-    const reverseMark = isReversed ? " ↻" : "";
-
-    const text = `
-🔮 ${card.name}${reverseMark}
-
-질문:
-${content}
-
-해석:
-${finalCategoryMeaning}
-
-조언:
-${finalCategoryAdvice}
-`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-
-      showToast("📝 결과가 복사되었습니다.");
-    } catch {
-      showToast("복사에 실패했습니다.");
-    }
-  };
 
   const saveShareImage = async () => {
     if (isPreparingShare) return;
@@ -381,7 +332,7 @@ ${finalCategoryAdvice}
           </h1>
 
           <p className="flow-line">
-            지금 당신의 흐름을 카드가 비추고 있습니다.
+            이 카드는 지금, 당신에게 꼭 필요한 이야기를 전하고 있습니다.
           </p>
 
           {/* question */}
@@ -400,7 +351,18 @@ ${finalCategoryAdvice}
                 {isReversed ? " (역방향)" : ""}
               </h3>
 
-              <p>{resultData.meaning}</p>
+              {resultData.meaning
+                .split(".")
+                .filter((line) => line.trim() !== "")
+                .map((line, i) => (
+                  <p
+                    key={i}
+                    className="line-appear"
+                    style={{ animationDelay: `${i * 0.4}s` }}
+                  >
+                    {line}.
+                  </p>
+                ))}
             </section>
           )}
 
@@ -409,7 +371,18 @@ ${finalCategoryAdvice}
             <section className="section-box reveal-up">
               <h3>카드의 조언</h3>
 
-              <p>{resultData.advice}</p>
+              {resultData.advice
+                .split(".")
+                .filter((line) => line.trim() !== "")
+                .map((line, i) => (
+                  <p
+                    key={i}
+                    className="line-appear"
+                    style={{ animationDelay: `${i * 0.3}s` }}
+                  >
+                    {line}.
+                  </p>
+                ))}
             </section>
           )}
 
@@ -427,18 +400,29 @@ ${finalCategoryAdvice}
             <div className="emotion-ending reveal-up">{endingText}</div>
           )}
 
+          <div id="result-card"></div>
+
           {/* share */}
           {step >= STEP.CTA && (
             <div className="cta-wrap reveal-up">
-              <p className="share-title">공유하기</p>
+              <p className="share-title">이 순간을 남겨보세요</p>
 
               <div className="share-group">
-                <Button onClick={copyLink}>🔗 링크 복사</Button>
-
-                <Button onClick={copyText}>📝 결과 복사</Button>
-
                 <Button onClick={saveShareImage}>
-                  {isPreparingShare ? "📸 생성 중..." : "📷 공유 이미지 저장"}
+                  {isPreparingShare
+                    ? "📸 생성 중..."
+                    : "📷 오늘의 카드 기록하기"}
+                </Button>
+
+                <Button onClick={handleCopy}>📋 이 해석 저장하기</Button>
+
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    showToast("🔗 링크 복사 완료");
+                  }}
+                >
+                  🔗 링크 복사
                 </Button>
               </div>
 

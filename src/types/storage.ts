@@ -6,6 +6,6 @@ export interface SavedResult {
   card: TarotCard;
   content: string;
   category: CategoryKey;
-  isReversed: boolean;
+  isReversed?: boolean;
   date: string;
 }

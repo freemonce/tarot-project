@@ -12,10 +12,10 @@ export default function EmptyState({ navigate }: Props) {
 
       <h3>"아직 기록이 없어요"</h3>
 
-      <p>"첫 리딩을 시작해보세요 🔮"</p>
+      <p>"오늘의 고민을 남겨보세요 ✨"</p>
 
       <Button variant="primary" size="lg" onClick={() => navigate("/")}>
-        첫 질문 하러가기
+        타로 보러가기
       </Button>
     </div>
   );

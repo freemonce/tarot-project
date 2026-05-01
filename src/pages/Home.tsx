@@ -1,8 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import "../styles/pages/Home.css";
+import { useEffect } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem("onboarding_seen")) {
+      alert("데이터는 기기에 저장됩니다. 백업을 권장합니다.");
+      localStorage.setItem("onboarding_seen", "true");
+    }
+  }, []);
 
   return (
     <div className="home-root">
