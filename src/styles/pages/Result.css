@@ -51,6 +51,13 @@
     rgba(255, 220, 140, 0.08),
     transparent 42%
   );
+
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.result-root.show .center-light {
+  opacity: 1;
 }
 
 .vignette {
@@ -105,14 +112,36 @@
     0 18px 40px rgba(0, 0, 0, 0.45),
     0 0 30px rgba(255, 215, 120, 0.12);
 
-  transition: transform 0.25s ease;
+  transform: scale(0.85) translateY(30px);
+  opacity: 0;
+  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   background: #111;
+  filter: blur(6px);
 }
 
 .result-card-img {
   width: 100%;
   display: block;
   height: auto;
+}
+
+.result-card.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+  animation: cardPop 0.6s cubic-bezier(0.22, 1.5, 0.36, 1);
+}
+
+@keyframes cardPop {
+  0% {
+    transform: scale(0.8) translateY(40px);
+  }
+  60% {
+    transform: scale(1.05) translateY(-6px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* 카드 광택 */
@@ -136,6 +165,49 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.result-content.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.result-content > * {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.result-content.show > * {
+  animation: revealUp 0.6s ease forwards;
+}
+
+.result-content.show > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.result-content.show > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.result-content.show > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.result-content.show > *:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.result-content.show > *:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.result-content.show > *:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+@keyframes revealUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .cinematic-sub {
@@ -154,6 +226,22 @@
 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+  animation: glowFade 1.2s ease;
+}
+
+@keyframes glowFade {
+  0% {
+    opacity: 0;
+    text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  60% {
+    opacity: 1;
+    text-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+  }
+  100% {
+    text-shadow: none;
+  }
 }
 
 .cursor {
@@ -262,6 +350,16 @@
 
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cta-wrap {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.result-content.show .cta-wrap {
+  animation: revealUp 0.6s ease forwards;
+  animation-delay: 0.8s;
 }
 
 /* ===============================

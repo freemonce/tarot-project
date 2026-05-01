@@ -25,9 +25,10 @@ import useCardAnimation from "../hooks/useCardAnimation";
 import useResultClosing from "../hooks/useResultClosing";
 import useCardTilt from "../hooks/useCardTilt";
 
-import { saveResult } from "../services/storage";
+import { getResults, saveResults } from "../services/storage";
+import { HistoryItem } from "../types/history";
 
-type CategoryKey =
+export type CategoryType =
   | "love"
   | "career"
   | "money"
@@ -73,11 +74,28 @@ export default function Result() {
   const [toast, setToast] = useState("");
   const toastTimer = useRef<number | null>(null);
 
+  const [showCard, setShowCard] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setShowCard(true), 250);
+    const t2 = setTimeout(() => setShowContent(true), 700);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, []);
+
   /* =====================================
      fallback
   ===================================== */
   const content = state?.content ?? "";
-  const category = state?.category ?? "love";
+  const category: CategoryType = CATEGORY_KEYS.includes(
+    state?.category as CategoryType,
+  )
+    ? (state?.category as CategoryType)
+    : "love";
   const isReversed = state?.isReversed ?? false;
 
   const fallbackCard: TarotCard = tarotCards[0];
@@ -104,8 +122,8 @@ export default function Result() {
    final data (SAFE VERSION)
 ===================================== */
 
-  const safeCategory = CATEGORY_KEYS.includes(category as CategoryKey)
-    ? (category as CategoryKey)
+  const safeCategory = CATEGORY_KEYS.includes(category as CategoryType)
+    ? (category as CategoryType)
     : "love";
 
   const normalSet = card.categoryInterpretations ?? {};
@@ -143,20 +161,35 @@ export default function Result() {
     "당신이 찾는 답은 이미 마음속에서 움직이고 있습니다.";
 
   /* =====================================
-     save result
-  ===================================== */
+   save result (FIXED)
+===================================== */
+  const hasSavedRef = useRef(false);
+
   useEffect(() => {
     if (!state) return;
 
-    saveResult({
-      id: String(Date.now()),
+    const prev = getResults() ?? [];
+
+    const isDuplicate = prev[0]?.content === content;
+
+    if (isDuplicate) return;
+
+    const newItem: HistoryItem = {
+      id: crypto.randomUUID(),
       card,
       content,
       category,
       isReversed,
       date: new Date().toISOString(),
-    });
-  }, [state, card, content, category, isReversed]);
+      favorite: false,
+    };
+
+    const MAX = 100;
+
+    saveResults([newItem, ...prev].slice(0, MAX));
+
+    hasSavedRef.current = true;
+  }, [state]);
 
   /* =====================================
      toast
@@ -316,25 +349,30 @@ ${finalCategoryAdvice}
       <div className="result-inner">
         {/* card */}
         <div className="card-stage">
-          <div className={`card-rotate-layer ${isReversed ? "reversed" : ""}`}>
+          <div className="card-float-layer">
             <div
-              ref={cardRef}
-              className="result-card"
-              style={tiltStyle as CSSProperties}
-              onMouseMove={onMouseMove}
-              onMouseLeave={onMouseLeave}
+              className={`card-rotate-layer ${isReversed ? "reversed" : ""}`}
             >
-              <img
-                src={card.image}
-                alt={card.name}
-                className="result-card-img"
-              />
+              <div
+                ref={cardRef}
+                className={`result-card ${showCard ? "show" : ""}`}
+                style={tiltStyle as CSSProperties}
+                onMouseMove={onMouseMove}
+                onMouseLeave={onMouseLeave}
+              >
+                <img
+                  src={card.image}
+                  alt={card.name}
+                  className="result-card-img"
+                />
+                <div className="card-shine" />
+              </div>
             </div>
           </div>
         </div>
 
         {/* content */}
-        <div className="result-content">
+        <div className={`result-content ${showContent ? "show" : ""}`}>
           <p className="cinematic-sub">Tarot Reading</p>
 
           <h1 className="main-title">
@@ -378,7 +416,7 @@ ${finalCategoryAdvice}
           {/* keywords */}
           {step >= STEP.KEYWORD && (
             <div className="keyword-wrap reveal-up">
-              {resultData.keywords.map((word) => (
+              {(resultData.keywords ?? []).map((word) => (
                 <span key={word}>#{word}</span>
               ))}
             </div>
@@ -422,8 +460,6 @@ ${finalCategoryAdvice}
               position: "fixed",
               top: "-9999px",
               left: "0",
-              // opacity: 0,
-              // pointerEvents: "none",
               width: "1080px",
               height: "1080px",
               overflow: "hidden",

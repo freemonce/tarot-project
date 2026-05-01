@@ -1,24 +1,33 @@
 // src/pages/MyPage.tsx
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 import "../styles/pages/Mypage.css";
 
-import { clearResults, getResults, saveResults } from "../services/storage";
+import {
+  clearResults,
+  getResults,
+  importResults,
+  mergeResults,
+  saveResults,
+} from "../services/storage";
 
 import Button from "../components/Button";
 import EmptyState from "../components/mypage/EmptyState";
-import HistoryCard from "../components/mypage/HistoryCard";
+import { getStreakDays, getTopCategory } from "../services/stats";
 
-import { TarotCard } from "../types/tarot";
-
-type HistoryItem = {
-  card: TarotCard;
-  content: string;
-  category: string;
-  date: string;
-};
+import { HistoryItem } from "../types/history";
+import Toolbar from "../components/mypage/Toolbar";
+import HistoryList from "../components/mypage/HistoryList";
+import InsightDeep from "../components/mypage/InsightDeep";
+import DetailModal from "../components/mypage/DetailModal";
 
 type SortType = "latest" | "oldest";
 
@@ -48,29 +57,82 @@ const MODAL_DURATION = 260;
 export default function MyPage() {
   const navigate = useNavigate();
 
+  const closeTimer = useRef<number | null>(null);
+
+  /* =========================
+     STATE
+  ========================= */
+
   const [list, setList] = useState<HistoryItem[]>(getResults());
 
-  const [selected, setSelected] = useState<HistoryItem | null>(null);
-  const [closing, setClosing] = useState(false);
-  const [visible, setVisible] = useState(false);
-
-  const [filter, setFilter] = useState<FilterType>("all");
-  const [keyword, setKeyword] = useState("");
-  const [sort, setSort] = useState<SortType>("latest");
-
-  /* CRUD */
-  const updateList = (nextList: HistoryItem[]) => {
-    setList(nextList);
-    saveResults(nextList);
-  };
-
-  const handleDelete = useCallback((targetDate: string) => {
-    setList((prev) => {
-      const next = prev.filter((item) => item.date !== targetDate);
-      saveResults(next);
-      return next;
-    });
+  useEffect(() => {
+    setList(getResults() ?? []);
   }, []);
+
+  const [filter, setFilter] = useState<FilterType>(
+    () => (localStorage.getItem("mypage_filter") as FilterType) || "all",
+  );
+
+  const [keyword, setKeyword] = useState(
+    () => localStorage.getItem("mypage_keyword") || "",
+  );
+
+  const [sort, setSort] = useState<SortType>(() => {
+    const saved = localStorage.getItem("mypage_sort");
+    return saved === "oldest" ? "oldest" : "latest";
+  });
+
+  const [showFavOnly, setShowFavOnly] = useState(
+    () => localStorage.getItem("mypage_showFavOnly") === "true",
+  );
+
+  const [favFirst, setFavFirst] = useState(
+    () => localStorage.getItem("mypage_favFirst") === "true",
+  );
+
+  const [selected, setSelected] = useState<HistoryItem | null>(null);
+  const [visible, setVisible] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [closing, setClosing] = useState(false);
+
+  /* =========================
+     SAVE
+  ========================= */
+  const updateList = useCallback((next: HistoryItem[]) => {
+    setList(next);
+    saveResults(next);
+  }, []);
+
+  /* =========================
+     CRUD
+  ========================= */
+  const handleDelete = useCallback(
+    (targetDate: string) => {
+      const next = list.filter((item) => item.date !== targetDate);
+      updateList(next);
+
+      if (selected?.date === targetDate) {
+        setSelected(null);
+      }
+    },
+    [list, selected, updateList],
+  );
+
+  const handleFavorite = useCallback(
+    (targetDate: string) => {
+      const next = list.map((item) =>
+        item.date === targetDate ? { ...item, favorite: !item.favorite } : item,
+      );
+
+      updateList(next);
+
+      if (selected?.date === targetDate) {
+        const found = next.find((v) => v.date === targetDate) || null;
+        setSelected(found);
+      }
+    },
+    [list, selected, updateList],
+  );
 
   const handleClearAll = () => {
     const ok = window.confirm("모든 기록을 삭제할까요?");
@@ -78,17 +140,32 @@ export default function MyPage() {
 
     setList([]);
     clearResults();
+
+    setSelected(null);
+    setKeyword("");
+    setFilter("all");
+    setSort("latest");
+    setShowFavOnly(false);
+    setFavFirst(false);
   };
 
-  /* MODAL */
+  const handleResetFilters = () => {
+    setFilter("all");
+    setKeyword("");
+    setSort("latest");
+    setShowFavOnly(false);
+    setFavFirst(false);
+  };
+
+  /* =========================
+     MODAL
+  ========================= */
   const openModal = useCallback((item: HistoryItem) => {
-    setClosing(false);
     setSelected(item);
+    setClosing(false);
     setVisible(false);
 
-    requestAnimationFrame(() => {
-      setVisible(true);
-    });
+    requestAnimationFrame(() => setVisible(true));
   }, []);
 
   const closeModal = useCallback(() => {
@@ -96,14 +173,46 @@ export default function MyPage() {
 
     setClosing(true);
 
-    setTimeout(() => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+    }
+
+    closeTimer.current = window.setTimeout(() => {
       setSelected(null);
-      setClosing(false);
       setVisible(false);
+      setClosing(false);
+      closeTimer.current = null;
     }, MODAL_DURATION);
   }, [closing]);
 
-  /* FILTER */
+  useEffect(() => {
+    if (!localStorage.getItem("backup_guide_seen")) {
+      alert("데이터는 기기에 저장됩니다.\n백업을 권장합니다.");
+      localStorage.setItem("backup_guide_seen", "true");
+    }
+  }, []);
+
+  /* =========================
+     SELECTED DATA
+  ========================= */
+  const selectedReversed = selected?.isReversed ?? false;
+
+  const selectedMeaning = selectedReversed
+    ? (selected?.card.reversedMeaning ?? selected?.card.meaning)
+    : selected?.card.meaning;
+
+  const selectedAdvice = selectedReversed
+    ? (selected?.card.reversedAdvice ?? selected?.card.advice)
+    : selected?.card.advice;
+
+  const selectedKeywords =
+    selectedReversed && selected?.card.reversedKeywords?.length
+      ? selected.card.reversedKeywords
+      : selected?.card.keywords || [];
+
+  /* =========================
+     FILTERED LIST
+  ========================= */
   const filteredList = useMemo(() => {
     let data = [...list];
 
@@ -111,32 +220,57 @@ export default function MyPage() {
       data = data.filter((item) => item.category === filter);
     }
 
-    const searchWord = keyword.trim().toLowerCase();
-
-    if (searchWord) {
-      data = data.filter(
-        (item) =>
-          item.content.toLowerCase().includes(searchWord) ||
-          item.card.name.toLowerCase().includes(searchWord) ||
-          item.card.keywords?.some((tag) =>
-            tag.toLowerCase().includes(searchWord),
-          ),
-      );
+    if (showFavOnly) {
+      data = data.filter((item) => item.favorite);
     }
 
-    data.sort((a, b) =>
-      sort === "latest"
+    const search = keyword.trim().toLowerCase();
+
+    if (search) {
+      data = data.filter((item) => {
+        const pool = [
+          item.content,
+          item.card.name,
+          item.card.meaning,
+          item.card.advice,
+          ...(item.card.keywords || []),
+        ]
+          .join(" ")
+          .toLowerCase();
+
+        return pool.includes(search);
+      });
+    }
+
+    data.sort((a, b) => {
+      if (favFirst && !!a.favorite !== !!b.favorite) {
+        return a.favorite ? -1 : 1;
+      }
+
+      return sort === "latest"
         ? new Date(b.date).getTime() - new Date(a.date).getTime()
-        : new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
+        : new Date(a.date).getTime() - new Date(b.date).getTime();
+    });
 
     return data;
-  }, [list, filter, keyword, sort]);
+  }, [list, filter, keyword, sort, showFavOnly, favFirst]);
 
-  const hasHistory = filteredList.length > 0;
+  const streak = getStreakDays(list);
+  const topCategory = getTopCategory(list);
 
-  /* INSIGHT */
+  const visibleList = filteredList.slice(0, visibleCount);
+
+  const hasMore = filteredList.length > visibleCount;
+
+  /* =========================
+     INSIGHT
+  ========================= */
   const totalCount = list.length;
+
+  const favoriteCount = useMemo(
+    () => list.filter((item) => item.favorite).length,
+    [list],
+  );
 
   const topType = useMemo(() => {
     if (!list.length) return "-";
@@ -159,185 +293,244 @@ export default function MyPage() {
     return words.length ? words.join(" / ") : "-";
   }, [list]);
 
-  /* ESC + BODY LOCK */
+  const topCards = useMemo(() => {
+    const map: Record<string, number> = {};
+
+    list.forEach((item) => {
+      map[item.card.name] = (map[item.card.name] || 0) + 1;
+    });
+
+    return Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3);
+  }, [list]);
+
+  const moodFlow = useMemo(() => {
+    const recent = list.slice(0, 5).flatMap((item) => item.card.keywords || []);
+
+    const joined = recent.join(" ");
+
+    if (/불안|걱정|혼란|갈등/.test(joined)) return "불안기 😵";
+    if (/회복|안정|치유|평화/.test(joined)) return "회복기 🌿";
+    if (/성장|도전|기회|시작/.test(joined)) return "상승기 🚀";
+
+    return "변화기 ✨";
+  }, [list]);
+
+  const monthCount = useMemo(() => {
+    const now = new Date();
+
+    return list.filter((item) => {
+      const d = new Date(item.date);
+
+      return (
+        d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()
+      );
+    }).length;
+  }, [list]);
+
+  const hasHistory = filteredList.length > 0;
+
+  const handleImport = async (file: File) => {
+    const text = await file.text();
+
+    try {
+      const data = importResults(text);
+      const merged = mergeResults(list, data);
+      updateList(merged);
+    } catch {
+      alert("파일 오류");
+    }
+  };
+
+  const handleExport = () => {
+    const data = JSON.stringify(list);
+    const blob = new Blob([data], { type: "application/json" });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "tarot_backup.json";
+    a.click();
+  };
+
+  /* =========================
+     EFFECT
+  ========================= */
+  useEffect(() => {
+    localStorage.setItem("mypage_filter", filter);
+    localStorage.setItem("mypage_keyword", keyword);
+    localStorage.setItem("mypage_sort", sort);
+    localStorage.setItem("mypage_showFavOnly", String(showFavOnly));
+    localStorage.setItem("mypage_favFirst", String(favFirst));
+  }, [filter, keyword, sort, showFavOnly, favFirst]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
+  }, []);
+
   useEffect(() => {
     if (!selected) return;
 
-    const handleEsc = (e: KeyboardEvent) => {
+    document.body.style.overflow = "hidden";
+
+    const onEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
     };
 
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleEsc);
+    window.addEventListener("keydown", onEsc);
 
     return () => {
       document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleEsc);
+      window.removeEventListener("keydown", onEsc);
     };
-  }, [selected]);
+  }, [selected, closeModal]);
+
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [keyword, filter, sort, showFavOnly, favFirst]);
 
   /* =========================
      UI
   ========================= */
   return (
     <div className="mypage-root">
-      <div className="mypage-overlay" />
-
+      {/* HEADER */}
       <div className="mypage-wrap">
-        {/* HEADER */}
         <header className="mypage-header">
           <p className="mypage-mini">MY TAROT JOURNAL</p>
-
           <h1 className="mypage-title">내 질문들의 기록관</h1>
 
+          <Button
+            variant="ghost"
+            className="back-home-btn"
+            onClick={() => navigate("/")}
+          >
+            홈으로
+          </Button>
           <p className="mypage-sub">지난 고민과 메시지를 다시 돌아보세요.</p>
         </header>
 
         {/* INSIGHT */}
         {list.length > 0 && (
-          <section className="insight-grid">
-            <div className="insight-box">
-              <span>총 기록</span>
-              <strong>{totalCount}개</strong>
-            </div>
+          <>
+            <section className="insight-grid">
+              <div className="insight-box">
+                <span>총 기록</span>
+                <strong>{totalCount}개</strong>
+              </div>
 
-            <div className="insight-box">
-              <span>가장 많이 나온 타입</span>
-              <strong>{topType}</strong>
-            </div>
+              <div className="insight-box">
+                <span>가장 많이 나온 타입</span>
+                <strong>{topType}</strong>
+              </div>
 
-            <div className="insight-box">
-              <span>최근 키워드</span>
-              <strong>{recentKeywords}</strong>
-            </div>
-          </section>
+              <div className="insight-box">
+                <span>최근 키워드</span>
+                <strong>{recentKeywords}</strong>
+              </div>
+
+              <div className="insight-box">
+                <span>TOP3 카드</span>
+                <div className="rank-list">
+                  {topCards.map(([name, count], i) => (
+                    <div key={name} className="rank-row">
+                      <b>{i === 0 ? "🥇" : i === 1 ? "🥈" : "🥉"}</b>
+                      <em>{name}</em>
+                      <strong>{count}회</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="insight-box">
+                <span>최근 감정 흐름</span>
+                <strong>{moodFlow}</strong>
+              </div>
+
+              <div className="insight-box">
+                <span>이번 달 질문 수</span>
+                <strong>{monthCount}회</strong>
+              </div>
+
+              <div className="insight-box">
+                <span>연속 기록</span>
+                <strong>{streak}일 🔥</strong>
+              </div>
+
+              <div className="insight-box">
+                <span>가장 많이 묻는 주제</span>
+                <strong>{topCategory}</strong>
+              </div>
+            </section>
+
+            <InsightDeep list={list} />
+          </>
         )}
 
         {/* TOOLBAR */}
-        {list.length > 0 && (
-          <div className="mypage-topbar">
-            <span className="history-count">
-              {filteredList.length}개의 기록
-            </span>
+        <Toolbar
+          filter={filter}
+          setFilter={setFilter}
+          CATEGORY_OPTIONS={CATEGORY_OPTIONS}
+          favFirst={favFirst}
+          setFavFirst={setFavFirst}
+          keyword={keyword}
+          setKeyword={setKeyword}
+          sort={sort}
+          setSort={setSort}
+          showFavOnly={showFavOnly}
+          setShowFavOnly={setShowFavOnly}
+          favoriteCount={favoriteCount}
+          handleResetFilters={handleResetFilters}
+          handleClearAll={handleClearAll}
+          handleImport={handleImport}
+          handleExport={handleExport}
+        />
 
-            <div className="toolbar-controls">
-              <select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value as FilterType)}
-              >
-                {CATEGORY_OPTIONS.map((item) => (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
-                  </option>
-                ))}
-              </select>
-
-              <input
-                type="text"
-                placeholder="질문 / 카드 / 키워드 검색"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-              />
-
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value as SortType)}
-              >
-                <option value="latest">최신순</option>
-                <option value="oldest">오래된순</option>
-              </select>
-
-              <Button variant="danger" onClick={handleClearAll}>
-                전체 삭제
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* EMPTY */}
+        {/* LIST */}
         {!list.length ? (
           <EmptyState navigate={navigate} />
         ) : !hasHistory ? (
           <div className="empty-filter-result">검색 결과가 없습니다.</div>
         ) : (
-          <section className="history-list">
-            {filteredList.map((item) => (
-              <HistoryCard
-                key={`${item.date}-${item.card.id}`}
-                item={item}
-                handleDelete={handleDelete}
-                onOpen={() => openModal(item)}
-              />
-            ))}
+          <>
+            <HistoryList
+              data={visibleList}
+              keyword={keyword}
+              handleDelete={handleDelete}
+              handleFavorite={handleFavorite}
+              onOpen={openModal}
+            />
 
-            <div className="restart-btn">
-              <Button variant="primary" size="lg" onClick={() => navigate("/")}>
-                🔮 새로운 질문 시작하기
-              </Button>
-            </div>
-          </section>
+            {hasMore && (
+              <div className="load-more-wrap">
+                <Button
+                  variant="ghost"
+                  className="load-more-btn"
+                  onClick={() => setVisibleCount((prev) => prev + 10)}
+                >
+                  이전 기록 10개 더 보기
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
       {/* MODAL */}
       {selected && (
-        <div
-          className={`detail-overlay ${
-            closing ? "hide" : visible ? "show" : "hide"
-          }`}
-          onClick={closeModal}
-        >
-          <div
-            className={`detail-modal ${
-              closing ? "hide" : visible ? "show" : "hide"
-            }`}
-            onClick={(e: React.MouseEvent<HTMLDivElement>) =>
-              e.stopPropagation()
-            }
-          >
-            <button className="detail-close" onClick={closeModal} autoFocus>
-              ✕
-            </button>
-
-            <p className="detail-date">
-              {new Date(selected.date).toLocaleDateString("ko-KR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-
-            <h2 className="detail-title">{selected.card.name}</h2>
-            <p className="detail-subtype">{selected.card.type}</p>
-
-            <section>
-              <h4>질문</h4>
-              <p>{selected.content}</p>
-            </section>
-
-            <section>
-              <h4>카드 의미</h4>
-              <p>{selected.card.meaning}</p>
-            </section>
-
-            <section>
-              <h4>조언</h4>
-              <p>{selected.card.advice}</p>
-            </section>
-
-            {selected.card.keywords?.length > 0 && (
-              <section>
-                <h4>키워드</h4>
-
-                <div className="detail-tags">
-                  {selected.card.keywords.map((tag, i) => (
-                    <span key={i}>#{tag}</span>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
-        </div>
+        <DetailModal
+          item={selected}
+          visible={visible}
+          closing={closing}
+          onClose={closeModal}
+          onDelete={handleDelete}
+          onFavorite={handleFavorite}
+        />
       )}
     </div>
   );
