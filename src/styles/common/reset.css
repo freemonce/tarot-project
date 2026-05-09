@@ -1,0 +1,15 @@
+/* 파일 경로 : src > styles > common > reset.css */
+
+/* 기본 = 모바일 */
+.result-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* PC에서만 변경 */
+@media (min-width: 1024px) {
+  .result-container {
+    gap: 28px;
+  }
+}

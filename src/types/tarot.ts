@@ -11,6 +11,9 @@ export type CategoryKey =
   | "future"
   | "choice";
 
+// UI 전용 (새로 추가)
+export type UICategoryKey = "love" | "career" | "money" | "relation" | "self";
+
 export interface TarotInterpretation {
   meaning: string;
   advice: string;

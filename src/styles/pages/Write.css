@@ -243,7 +243,7 @@ body {
 ================================= */
 .write-submit-btn {
   width: 100%;
-  margin-top: 28px;
+  margin-top: 24px;
   min-height: 58px;
 
   font-size: 16px !important;
@@ -320,4 +320,100 @@ body {
     min-height: 52px;
     font-size: 14px;
   }
+}
+
+.sub-category {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.sub-category .chip {
+  padding: 12px 18px;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  color: #eee;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sub-category .chip:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sub-category .chip.active {
+  background: linear-gradient(135deg, #ffd978, #ffb347);
+  color: #111;
+  font-weight: 700;
+
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 200, 100, 0.25);
+}
+
+.question-category {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.question-category .chip {
+  padding: 10px 16px;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  color: #bbb;
+  font-size: 13px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.question-category .chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.question-category .chip.active {
+  background: linear-gradient(135deg, #7b5cff, #5a6cff);
+  color: #fff;
+
+  font-weight: 600;
+  transform: scale(1.05);
+
+  box-shadow: 0 6px 16px rgba(123, 92, 255, 0.3);
+}
+
+.section-block {
+  margin-top: 22px;
+  padding: 16px;
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.section-label {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.selection-summary {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #ffd978;
+  opacity: 0.8;
 }

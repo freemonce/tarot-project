@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ResultPageState } from "../../types/navigation";
 import { CategoryKey } from "../../types/tarot";
 import { getResultData } from "../../hooks/useResultData";
@@ -9,12 +9,11 @@ import { CATEGORY_KEYS } from "../../constants/category";
 
 export default function ResultContainer() {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const state = location.state as ResultPageState | null;
 
   const content = state?.content ?? "";
-  const category = state?.category ?? "love";
+  const category = state?.mainCategory ?? "love";
   const isReversed = state?.isReversed ?? false;
 
   const card = state?.card ?? tarotCards[0];
@@ -25,7 +24,13 @@ export default function ResultContainer() {
     ? (category as CategoryKey)
     : "love";
 
-  const resultData = getResultData(card, safeCategory, isReversed);
+  const resultData = getResultData({
+    card,
+    category: safeCategory,
+    subCategory: state?.subCategory,
+    questionType: state?.questionType,
+    isReversed,
+  });
 
   const handleCopy = async () => {
     const text = buildShareText({

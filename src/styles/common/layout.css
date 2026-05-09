@@ -1,0 +1,22 @@
+/* 파일 경로 : src > styles > common > layout.css */
+
+/* 1. 기본 = 모바일 */
+.app-container {
+  width: 100%;
+  padding: 16px;
+}
+
+/* 2. 태블릿 */
+@media (min-width: 768px) {
+  .app-container {
+    padding: 24px;
+  }
+}
+
+/* 3. PC */
+@media (min-width: 1024px) {
+  .app-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}

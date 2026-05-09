@@ -34,12 +34,15 @@ export default function Home() {
           </p>
 
           <div className="hero-buttons">
-            <button className="btn-primary" onClick={() => navigate("/write")}>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/write")}
+            >
               카드 뽑기 시작하기
             </button>
 
             <button
-              className="btn-secondary"
+              className="btn btn-secondary"
               onClick={() => navigate("/mypage")}
             >
               지난 기록 보기

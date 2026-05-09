@@ -1,3 +1,4 @@
+import { CategoryType } from "../pages/Result";
 import type { TarotCard, CategoryKey } from "./tarot";
 
 export interface CardPageState {
@@ -13,7 +14,13 @@ export interface WritePageState {
 export interface ResultPageState {
   card: TarotCard;
   content: string;
-  category: CategoryKey;
-  isReversed?: boolean;
-  originRect?: DOMRect;
+
+  category: string;
+
+  mainCategory: CategoryType;
+  subCategory: string;
+  questionType: string;
+
+  isReversed: boolean;
+  originRect: DOMRect;
 }

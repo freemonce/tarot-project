@@ -5,24 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 import "../styles/pages/Write.css";
 import Button from "../components/Button";
-import type { CategoryKey } from "../types/tarot";
-
-type CategoryItem = {
-  key: CategoryKey;
-  label: string;
-  icon: string;
-};
-
-const categories: CategoryItem[] = [
-  { key: "love", label: "연애", icon: "💘" },
-  { key: "career", label: "커리어", icon: "💼" },
-  { key: "money", label: "금전", icon: "💰" },
-  { key: "mind", label: "심리", icon: "🧠" },
-  { key: "relation", label: "인간관계", icon: "🤝" },
-  { key: "health", label: "건강", icon: "🌿" },
-  { key: "future", label: "미래운세", icon: "🌙" },
-  { key: "choice", label: "선택/결정", icon: "⚖️" },
-];
+import type { UICategoryKey } from "../types/tarot";
+import { categoryUI, questionMap, subCategoryMap } from "../data/category";
 
 const MAX_LENGTH = 120;
 
@@ -30,26 +14,52 @@ export default function Write() {
   const navigate = useNavigate();
 
   const [content, setContent] = useState("");
-  const [category, setCategory] = useState<CategoryKey>("love");
+  const [mainCategory, setMainCategory] = useState<UICategoryKey>("love");
+
+  const [subCategory, setSubCategory] = useState<string | null>(null);
+  const [questionType, setQuestionType] = useState<string | null>(null);
+
   const [shake, setShake] = useState(false);
+  const currentMain = categoryUI.find((c) => c.key === mainCategory);
 
   const remain = useMemo(() => MAX_LENGTH - content.length, [content]);
 
+  // ✅ 카테고리 변경 시 초기화 (핵심)
+  const handleMainCategory = (key: UICategoryKey) => {
+    setMainCategory(key);
+    setSubCategory(null);
+    setQuestionType(null);
+  };
+
   const handleSubmit = () => {
-    if (!content.trim()) {
+    // ✅ 필수 입력 체크 강화
+    if (!content.trim() || !subCategory || !questionType) {
       setShake(true);
+      setTimeout(() => setShake(false), 500);
+      return;
+    }
 
-      setTimeout(() => {
-        setShake(false);
-      }, 500);
+    if (!content.trim()) {
+      alert("질문을 입력해주세요");
+      return;
+    }
 
+    if (!subCategory) {
+      alert("세부 상황을 선택해주세요");
+      return;
+    }
+
+    if (!questionType) {
+      alert("궁금한 방향을 선택해주세요");
       return;
     }
 
     navigate("/card", {
       state: {
         content: content.trim(),
-        category,
+        mainCategory,
+        subCategory,
+        questionType,
       },
     });
   };
@@ -89,17 +99,17 @@ export default function Write() {
           </div>
         </div>
 
-        {/* category */}
+        {/* main category */}
         <div className="write-category-grid">
-          {categories.map((item) => {
-            const active = category === item.key;
+          {categoryUI.map((item) => {
+            const active = mainCategory === item.key;
 
             return (
               <button
                 key={item.key}
                 type="button"
                 className={`category-chip ${active ? "active" : ""}`}
-                onClick={() => setCategory(item.key)}
+                onClick={() => handleMainCategory(item.key)}
               >
                 <span className="chip-icon">{item.icon}</span>
                 <span>{item.label}</span>
@@ -108,12 +118,58 @@ export default function Write() {
           })}
         </div>
 
+        {/* sub category */}
+        {mainCategory && (
+          <div className="section-block">
+            <p className="section-label">세부 상황</p>
+            <div className="sub-category">
+              {subCategoryMap[mainCategory].map((sub) => (
+                <button
+                  key={sub}
+                  className={`chip ${subCategory === sub ? "active" : ""}`}
+                  onClick={() => {
+                    setSubCategory(sub);
+                    setQuestionType(null); // ✅ 다시 선택 강제
+                  }}
+                >
+                  {sub}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* question type */}
+        {subCategory && (
+          <div className="section-block">
+            <p className="section-label">궁금한 방향</p>
+            <div className="question-category">
+              {questionMap[mainCategory].map((q) => (
+                <button
+                  key={q}
+                  className={`chip ${questionType === q ? "active" : ""}`}
+                  onClick={() => setQuestionType(q)}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+
+            {subCategory && questionType && (
+              <div className="selection-summary">
+                {currentMain?.label} → {subCategory} → {questionType}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* submit */}
         <Button
           variant="primary"
           size="lg"
           className="write-submit-btn"
           onClick={handleSubmit}
+          disabled={!subCategory || !questionType || !content.trim()}
         >
           카드에게 물어보기 ✨
         </Button>

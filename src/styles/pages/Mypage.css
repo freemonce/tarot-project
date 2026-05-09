@@ -50,6 +50,12 @@ a {
     linear-gradient(135deg, #050505 0%, #0d0d14 45%, #090909 100%);
 }
 
+.mypage-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .mypage-overlay {
   position: absolute;
   inset: 0;
@@ -406,6 +412,7 @@ a {
 .history-list {
   display: grid;
   gap: 16px;
+  flex-direction: column;
 }
 
 .restart-btn {

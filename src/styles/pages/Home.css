@@ -3,7 +3,7 @@
 .home-root {
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top, rgba(120, 90, 255, 0.22), transparent 35%),
     radial-gradient(
@@ -13,6 +13,15 @@
     ),
     linear-gradient(135deg, #0b0b16, #141427 45%, #090912);
   color: #fff;
+}
+
+.home-title {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.home-sub {
+  opacity: 0.7;
 }
 
 /* ---------------- */
@@ -53,16 +62,13 @@
 /* ---------------- */
 
 .home-container {
-  position: relative;
-  z-index: 2;
-  min-height: 100vh;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 24px;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 16px;
+  text-align: center;
+  padding-bottom: 120px;
   align-items: center;
-  gap: 32px;
 }
 
 /* ---------------- */
@@ -93,18 +99,19 @@
 }
 
 .hero-title {
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  line-height: 1.2;
-  font-weight: 750;
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 700;
   margin-bottom: 25px;
   letter-spacing: -0.02em;
 }
 
 .hero-desc {
-  font-size: 1.1rem;
-  line-height: 1.8;
+  font-size: 15px;
+  line-height: 1.7;
   color: rgba(255, 255, 255, 0.78);
   margin-bottom: 34px;
+  letter-spacing: 0.02em;
 }
 
 /* ---------------- */
@@ -121,7 +128,6 @@
 .btn-secondary {
   border: none;
   cursor: pointer;
-  padding: 15px 22px;
   border-radius: 999px;
   font-size: 0.98rem;
   font-weight: 700;
@@ -174,7 +180,7 @@
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.4),
     0 0 40px rgba(124, 92, 255, 0.18);
-  animation: floatCard 4s ease-in-out infinite;
+  animation: none;
 }
 
 .tarot-card span {
@@ -192,6 +198,26 @@
     transparent 70%
   );
   filter: blur(12px);
+}
+
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  padding: 14px 16px;
+  background: rgba(10, 10, 20, 0.75);
+  backdrop-filter: blur(12px);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.bottom-actions button:first-child {
+  box-shadow: 0 0 20px rgba(124, 92, 255, 0.4);
 }
 
 /* ---------------- */
@@ -226,48 +252,36 @@
 /* 반응형 */
 /* ---------------- */
 
-@media (max-width: 960px) {
+@media (min-width: 1024px) {
   .home-container {
-    grid-template-columns: 1fr;
-    text-align: center;
-    padding-top: 70px;
-  }
-
-  .hero-card {
-    padding: 36px 24px;
-  }
-
-  .hero-buttons {
-    justify-content: center;
-  }
-
-  .floating-card {
-    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    text-align: left;
   }
 
   .tarot-card {
-    width: 210px;
-    height: 330px;
+    animation: floatCard 4s ease-in-out infinite;
   }
-}
 
-@media (max-width: 520px) {
   .hero-title {
-    font-size: 2.1rem;
+    font-size: 2.6rem;
   }
 
   .hero-desc {
-    font-size: 0.96rem;
+    font-size: 1.05rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-buttons {
+    flex-direction: row;
+    justify-content: center;
   }
 
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-  }
-
-  .tarot-card {
-    width: 180px;
-    height: 280px;
-    font-size: 3rem;
+  .hero-card {
+    padding: 40px 32px;
   }
 }

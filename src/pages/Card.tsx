@@ -11,6 +11,13 @@ type DrawnCard = {
   isReversed: boolean;
 };
 
+type CardLocationState = {
+  content: string;
+  mainCategory: string;
+  subCategory: string;
+  questionType: string;
+};
+
 /* 카드 섞기 */
 function shuffle(array: TarotCard[]): TarotCard[] {
   const copied = [...array];
@@ -25,15 +32,9 @@ function shuffle(array: TarotCard[]): TarotCard[] {
 
 export default function Card() {
   const navigate = useNavigate();
-  const { state } = useLocation() as { state: CardPageState };
 
   const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const timersRef = useRef<number[]>([]);
-
-  const { content, category } = state ?? {
-    content: "테스트 고민",
-    category: "mind",
-  };
 
   const [loading, setLoading] = useState(true);
   const [seed, setSeed] = useState(0);
@@ -45,6 +46,20 @@ export default function Card() {
   const [isZoomed, setIsZoomed] = useState(false);
   const [isGlow, setIsGlow] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const location = useLocation();
+  const state = location.state as CardLocationState | null;
+
+  const content = state?.content;
+  const mainCategory = state?.mainCategory;
+  const subCategory = state?.subCategory;
+  const questionType = state?.questionType;
+
+  useEffect(() => {
+    if (!mainCategory || !subCategory || !questionType) {
+      navigate("/");
+    }
+  }, [mainCategory, subCategory, questionType, navigate]);
 
   /* 첫 진입 로딩 */
   useEffect(() => {
@@ -133,7 +148,9 @@ export default function Card() {
         state: {
           card,
           content,
-          category,
+          mainCategory,
+          subCategory,
+          questionType,
           isReversed: drawn.isReversed,
           originRect: rect,
         },
@@ -164,7 +181,7 @@ export default function Card() {
           disabled={isLocked}
           onClick={() =>
             navigate("/write", {
-              state: { content, category },
+              state: { content, mainCategory, subCategory, questionType },
             })
           }
         >

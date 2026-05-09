@@ -11,11 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 
 import { tarotCards } from "../data/tarot";
-import type {
-  CategoryKey,
-  TarotCard,
-  TarotInterpretation,
-} from "../types/tarot";
+import type { CategoryKey, TarotCard } from "../types/tarot";
 import type { ResultPageState } from "../types/navigation";
 
 import { STEP } from "../constants/resultStep";
@@ -54,8 +50,6 @@ const CATEGORY_KEYS = [
   "choice",
 ] as const;
 
-type InterpretMap = Partial<Record<CategoryKey, TarotInterpretation>>;
-
 /* =====================================
    Ending Message
 ===================================== */
@@ -74,6 +68,21 @@ export default function Result() {
   const location = useLocation();
 
   const state = location.state as ResultPageState | null;
+
+  /* =====================================
+     no state
+  ===================================== */
+  if (!state) {
+    return (
+      <div className="no-result">
+        <div className="no-result-box">
+          <h2>결과를 불러올 수 없습니다.</h2>
+
+          <Button onClick={() => navigate("/")}>처음으로</Button>
+        </div>
+      </div>
+    );
+  }
 
   const shareRef = useRef<HTMLDivElement>(null);
   const [isPreparingShare, setIsPreparingShare] = useState(false);
@@ -98,10 +107,10 @@ export default function Result() {
      fallback
   ===================================== */
   const content = state?.content ?? "";
-  const category: CategoryType = CATEGORY_KEYS.includes(
-    state?.category as CategoryType,
+  const mainCategory: CategoryType = CATEGORY_KEYS.includes(
+    state?.mainCategory as CategoryType,
   )
-    ? (state?.category as CategoryType)
+    ? (state?.mainCategory as CategoryType)
     : "love";
   const isReversed = state?.isReversed ?? false;
 
@@ -120,22 +129,42 @@ export default function Result() {
 
   const { handleClose } = useResultClosing();
 
-  const { tiltStyle, onMouseMove, onMouseLeave } = useCardTilt(
-    cardRef,
-    cardSettled,
-  );
+  const {
+    tiltStyle: originalTiltStyle,
+    onMouseMove,
+    onMouseLeave,
+  } = useCardTilt(cardRef, cardSettled);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const tiltStyle = isMobile ? {} : originalTiltStyle;
 
   /* =====================================
    final data (SAFE VERSION)
 ===================================== */
 
   const safeCategory: CategoryKey = CATEGORY_KEYS.includes(
-    category as CategoryKey,
+    mainCategory as CategoryKey,
   )
-    ? (category as CategoryKey)
+    ? (mainCategory as CategoryKey)
     : "love";
 
-  const resultData = getResultData(card, safeCategory, isReversed);
+  const resultData = getResultData({
+    card,
+    category: safeCategory,
+    subCategory: state.subCategory,
+    questionType: state.questionType,
+    isReversed,
+  });
 
   const endingText =
     ENDING_MESSAGE[safeCategory] ??
@@ -152,12 +181,12 @@ export default function Result() {
       id: crypto.randomUUID(),
       card,
       content,
-      category,
+      category: safeCategory,
       isReversed,
       date: new Date().toISOString(),
       favorite: false,
     });
-  }, [state, card, content, category, isReversed]);
+  }, [state, card, content, mainCategory, isReversed]);
 
   const handleCopy = async () => {
     try {
@@ -273,21 +302,6 @@ export default function Result() {
   };
 
   /* =====================================
-     no state
-  ===================================== */
-  if (!state) {
-    return (
-      <div className="no-result">
-        <div className="no-result-box">
-          <h2>결과를 불러올 수 없습니다.</h2>
-
-          <Button onClick={() => navigate("/")}>처음으로</Button>
-        </div>
-      </div>
-    );
-  }
-
-  /* =====================================
      UI
   ===================================== */
   return (
@@ -308,8 +322,8 @@ export default function Result() {
                 ref={cardRef}
                 className={`result-card ${showCard ? "show" : ""}`}
                 style={tiltStyle as CSSProperties}
-                onMouseMove={onMouseMove}
-                onMouseLeave={onMouseLeave}
+                onMouseMove={isMobile ? undefined : onMouseMove}
+                onMouseLeave={isMobile ? undefined : onMouseLeave}
               >
                 <img
                   src={card.image}
@@ -325,6 +339,10 @@ export default function Result() {
         {/* content */}
         <div className={`result-content ${showContent ? "show" : ""}`}>
           <p className="cinematic-sub">Tarot Reading</p>
+
+          <div className="result-context">
+            {mainCategory} · {state.subCategory} · {state.questionType}
+          </div>
 
           <h1 className="main-title">
             {titleTyping}
