@@ -121,7 +121,10 @@ export default function Card() {
     setSelectedCardId(card.id);
 
     const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
+    const centerY =
+      window.innerWidth <= 768
+        ? window.innerHeight * 0.42
+        : window.innerHeight / 2;
 
     const cardCenterX = rect.left + rect.width / 2;
     const cardCenterY = rect.top + rect.height / 2;
@@ -129,8 +132,10 @@ export default function Card() {
     const deltaX = centerX - cardCenterX;
     const deltaY = centerY - cardCenterY;
 
+    const scaleValue = window.innerWidth <= 768 ? 1.15 : 1.35;
+
     setFlipStyle({
-      transform: `translate(${deltaX}px, ${deltaY}px) scale(1.35)`,
+      transform: `translate(${deltaX}px, ${deltaY}px) scale(${scaleValue})`,
       zIndex: 100,
     });
 
