@@ -94,8 +94,8 @@ export default function Result() {
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setShowCard(true), 250);
-    const t2 = setTimeout(() => setShowContent(true), 700);
+    const t1 = setTimeout(() => setShowCard(true), 120);
+    const t2 = setTimeout(() => setShowContent(true), 260);
 
     return () => {
       clearTimeout(t1);

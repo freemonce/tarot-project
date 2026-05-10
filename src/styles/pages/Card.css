@@ -30,9 +30,17 @@
 
 @media (max-width: 768px) {
   .card-toolbar {
-    position: static;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 40;
 
     width: 100%;
+    background: rgba(10, 10, 20, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    padding: 8px 0;
 
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -46,7 +54,7 @@
   }
 
   .card-page {
-    padding: 24px 16px 60px;
+    padding: 24px 16px calc(60px + env(safe-area-inset-bottom));
   }
 
   .card-grid {
@@ -55,31 +63,33 @@
   }
 
   .tarot-card {
-    max-width: 100%;
+    animation-duration: 0.3s;
+    touch-action: manipulation;
   }
 
-  .tarot-card:hover .card-inner {
-    transform: none;
+  .card-title {
+    margin-bottom: 20px;
   }
 }
 
 /* 카드 그리드 */
 .card-grid {
   width: 100%;
+  max-width: 520px;
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: clamp(10px, 2vw, 14px);
 
   justify-items: center;
 }
 
 /* 카드 */
 .tarot-card {
-  width: 100%;
-  max-width: 120px;
-
+  width: min(28vw, 140px);
+  max-width: 150px;
   aspect-ratio: 2 / 3;
+
   perspective: 1000px;
 
   cursor: pointer;
@@ -90,10 +100,13 @@
 
   animation: fadeUp 0.5s ease;
   will-change: transform;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.tarot-card:hover .card-inner {
-  transform: translateY(-8px) scale(1.04);
+@media (hover: hover) {
+  .tarot-card:hover .card-inner {
+    transform: translateY(-8px) scale(1.04);
+  }
 }
 
 /* 내부 */
@@ -145,7 +158,7 @@
 /* 선택 안 된 카드 */
 .tarot-card.dimmed {
   opacity: 0;
-  transform: scale(0.75);
+  transform: scale(0.88);
   pointer-events: none;
 }
 
@@ -164,7 +177,7 @@
 .tarot-card.glow {
   box-shadow:
     0 0 18px rgba(255, 215, 0, 0.55),
-    0 0 50px rgba(255, 140, 0, 0.35);
+    0 0 40px rgba(255, 140, 0, 0.28);
 }
 
 /* 배경 dim */
