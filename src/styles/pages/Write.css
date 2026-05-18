@@ -10,7 +10,8 @@ body {
 .write-page {
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   display: flex;
   align-items: center;
@@ -155,8 +156,12 @@ body {
 }
 
 .write-textarea:focus {
-  border-color: rgba(123, 92, 255, 0.55);
-  box-shadow: 0 0 0 4px rgba(123, 92, 255, 0.14);
+  border-color: rgba(123, 92, 255, 0.7);
+  box-shadow:
+    0 0 0 4px rgba(123, 92, 255, 0.16),
+    0 0 24px rgba(123, 92, 255, 0.18);
+
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .write-counter {
@@ -171,6 +176,10 @@ body {
 .write-counter span {
   color: #ffd978;
   font-weight: 700;
+}
+
+.write-counter.warning span {
+  color: #ff9b6b;
 }
 
 /* ===============================
@@ -290,7 +299,7 @@ body {
 ================================= */
 @media (max-width: 768px) {
   .write-page {
-    padding: 18px;
+    padding: 18px 18px calc(env(safe-area-inset-bottom) + 24px);
   }
 
   .write-shell {
@@ -307,7 +316,7 @@ body {
   }
 
   .write-textarea {
-    min-height: 150px;
+    min-height: 132px;
     font-size: 15px;
   }
 
@@ -396,7 +405,7 @@ body {
 }
 
 .section-block {
-  margin-top: 22px;
+  margin-top: 26px;
   padding: 16px;
   border-radius: 16px;
 
@@ -405,7 +414,7 @@ body {
 }
 
 .section-label {
-  margin-top: 20px;
+  margin-top: 0;
   margin-bottom: 8px;
   font-size: 13px;
   color: rgba(255, 255, 255, 0.5);

@@ -23,6 +23,7 @@ export default function Write() {
   const currentMain = categoryUI.find((c) => c.key === mainCategory);
 
   const remain = useMemo(() => MAX_LENGTH - content.length, [content]);
+  const warning = remain <= 20;
 
   // ✅ 카테고리 변경 시 초기화 (핵심)
   const handleMainCategory = (key: UICategoryKey) => {
@@ -94,7 +95,7 @@ export default function Write() {
             onChange={(e) => setContent(e.target.value)}
           />
 
-          <div className="write-counter">
+          <div className={`write-counter ${warning ? "warning" : ""}`}>
             <span>{content.length}</span> / {MAX_LENGTH}
           </div>
         </div>

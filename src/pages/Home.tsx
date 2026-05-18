@@ -1,3 +1,5 @@
+// src/pages/Home.tsx
+
 import { useNavigate } from "react-router-dom";
 import "../styles/pages/Home.css";
 import { useEffect } from "react";
