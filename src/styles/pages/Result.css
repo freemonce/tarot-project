@@ -167,18 +167,23 @@
 .result-content {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 18px;
+
   opacity: 0;
   transform: translateY(20px);
+
   transition:
     transform 0.35s ease,
     opacity 0.35s ease;
-  margin-top: 10px;
+
+  margin-top: 20px;
+
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.6);
   letter-spacing: 0.04em;
-  margin-top: 20px;
-  gap: 18px;
+
+  width: 100%;
+  min-width: 0;
 }
 
 .result-content.show {
@@ -292,7 +297,7 @@
 .question-box p,
 .section-box p {
   margin: 0;
-  line-height: 1.72;
+  line-height: 1.8;
   font-size: 0.97rem;
   color: rgba(255, 255, 255, 0.82);
 }
@@ -550,7 +555,7 @@
 ================================= */
 @media (max-width: 768px) {
   .result-root {
-    padding: 16px 0;
+    padding: 18px 14px;
   }
 
   .main-title {
@@ -563,7 +568,7 @@
   }
 
   .result-card {
-    width: min(72vw, 260px);
+    width: min(68vw, 240px);
     transform: none !important;
     filter: none !important;
   }
@@ -591,12 +596,6 @@
 .share-group button,
 .action-group button {
   min-height: 52px;
-}
-
-.result-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .result-text {
