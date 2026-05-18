@@ -1,12 +1,29 @@
+// src/hooks/useHistoryFilter.ts
+
 import { useMemo } from "react";
-import { HistoryItem } from "../types/history";
+
+import type { HistoryItem, CategoryType, ToneType } from "../types/history";
+
+import {
+  applyHistoryFilters,
+  sortByLatest,
+  sortByOldest,
+} from "../utils/history/historyFilter";
 
 type Props = {
   data: HistoryItem[];
+
   query: string;
+
   sort: "latest" | "oldest";
-  category: string | "all";
+
+  category: CategoryType | "all";
+
+  tone: ToneType | "all";
+
   favoriteOnly: boolean;
+
+  favFirst: boolean;
 };
 
 export default function useHistoryFilter({
@@ -14,36 +31,31 @@ export default function useHistoryFilter({
   query,
   sort,
   category,
+  tone,
   favoriteOnly,
+  favFirst,
 }: Props) {
   return useMemo(() => {
-    let result = [...data];
-
-    // 1. 검색
-    if (query.trim()) {
-      result = result.filter((item) =>
-        item.content.toLowerCase().includes(query.toLowerCase()),
-      );
-    }
-
-    // 2. 카테고리
-    if (category !== "all") {
-      result = result.filter((item) => item.category === category);
-    }
-
-    // 3. 즐겨찾기
-    if (favoriteOnly) {
-      result = result.filter((item) => item.favorite);
-    }
-
-    // 4. 정렬
-    result.sort((a, b) => {
-      if (sort === "latest") {
-        return +new Date(b.date) - +new Date(a.date);
-      }
-      return +new Date(a.date) - +new Date(b.date);
+    let result = applyHistoryFilters(data, {
+      category,
+      tone,
+      keyword: query,
+      favoriteOnly,
     });
 
+    if (sort === "oldest") {
+      result = sortByOldest(result);
+    } else {
+      result = sortByLatest(result);
+    }
+
+    if (favFirst) {
+      result.sort((a, b) => {
+        if (a.favorite === b.favorite) return 0;
+        return a.favorite ? -1 : 1;
+      });
+    }
+
     return result;
-  }, [data, query, sort, category, favoriteOnly]);
+  }, [data, query, sort, category, tone, favoriteOnly, favFirst]);
 }

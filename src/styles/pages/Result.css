@@ -186,6 +186,10 @@
   transform: translateY(0);
 }
 
+.result-content.hope {
+  border-color: rgba(255, 215, 120, 0.3);
+}
+
 .result-content > * {
   opacity: 0;
   transform: translateY(20px);
@@ -301,6 +305,18 @@
     rgba(255, 255, 255, 0.03)
   );
   line-height: 1.9;
+}
+
+.flow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.flow-item {
+  line-height: 1.8;
+  opacity: 0.92;
 }
 
 /* ===============================

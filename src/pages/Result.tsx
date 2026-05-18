@@ -25,9 +25,10 @@ import useCardAnimation from "../hooks/useCardAnimation";
 import useResultClosing from "../hooks/useResultClosing";
 import useCardTilt from "../hooks/useCardTilt";
 
-import { getResultData } from "../hooks/useResultData";
 import { saveResult } from "../services/resultService";
 import { buildShareText, copyToClipboard } from "../services/shareService";
+import { generateResult } from "../utils/result/generateResult";
+import { createHistoryItem } from "../utils/history/createHistoryItem";
 
 export type CategoryType =
   | "love"
@@ -85,6 +86,8 @@ export default function Result() {
   }
 
   const shareRef = useRef<HTMLDivElement>(null);
+
+  const savedRef = useRef(false);
   const [isPreparingShare, setIsPreparingShare] = useState(false);
 
   const [toast, setToast] = useState("");
@@ -158,13 +161,33 @@ export default function Result() {
     ? (mainCategory as CategoryKey)
     : "love";
 
-  const resultData = getResultData({
-    card,
-    category: safeCategory,
-    subCategory: state.subCategory,
-    questionType: state.questionType,
-    isReversed,
-  });
+  const result = useMemo(() => {
+    return (
+      generateResult({
+        card,
+        category: safeCategory,
+        questionType: state.questionType ?? "",
+        isReversed,
+      }) ?? {
+        meaning: "",
+        advice: "",
+
+        keywords: [],
+
+        flow: [],
+
+        tone: "neutral" as const,
+
+        summary: "현재 흐름을 분석 중입니다.",
+
+        special: "",
+        toneStyle: undefined,
+
+        emotionalLevel: 0,
+        chance: 0,
+      }
+    );
+  }, [card, safeCategory, state.questionType, isReversed]);
 
   const endingText =
     ENDING_MESSAGE[safeCategory] ??
@@ -175,26 +198,35 @@ export default function Result() {
 ===================================== */
 
   useEffect(() => {
-    if (!state) return;
+    if (!state || savedRef.current) return;
 
-    saveResult({
-      id: crypto.randomUUID(),
+    savedRef.current = true;
+
+    const historyItem = createHistoryItem({
       card,
+
       content,
+
       category: safeCategory,
+
+      subCategory: state.subCategory,
+      questionType: state.questionType,
+
       isReversed,
-      date: new Date().toISOString(),
-      favorite: false,
+
+      result,
     });
-  }, [state, card, content, mainCategory, isReversed]);
+
+    saveResult(historyItem);
+  }, [state, card, content, safeCategory, isReversed, result]);
 
   const handleCopy = async () => {
     try {
       const text = buildShareText({
         card,
         content,
-        meaning: resultData.meaning,
-        advice: resultData.advice,
+        meaning: result.meaning,
+        advice: result.advice,
         isReversed,
       });
 
@@ -369,7 +401,7 @@ export default function Result() {
                 {isReversed ? " (역방향)" : ""}
               </h3>
 
-              {resultData.meaning
+              {result.meaning
                 .split(".")
                 .filter((line) => line.trim() !== "")
                 .map((line, i) => (
@@ -389,7 +421,7 @@ export default function Result() {
             <section className="section-box reveal-up">
               <h3>카드의 조언</h3>
 
-              {resultData.advice
+              {result.advice
                 .split(".")
                 .filter((line) => line.trim() !== "")
                 .map((line, i) => (
@@ -404,10 +436,29 @@ export default function Result() {
             </section>
           )}
 
+          {/* flow */}
+          {step >= STEP.ADVICE && result.flow.length > 0 && (
+            <section className="section-box reveal-up">
+              <h3>흐름의 변화</h3>
+
+              <div className="flow-list">
+                {result.flow.map((item, i) => (
+                  <p
+                    key={i}
+                    className="flow-item line-appear"
+                    style={{ animationDelay: `${i * 0.35}s` }}
+                  >
+                    ✦ {item}
+                  </p>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* keywords */}
           {step >= STEP.KEYWORD && (
             <div className="keyword-wrap reveal-up">
-              {(resultData.keywords ?? []).map((word) => (
+              {(result.keywords ?? []).map((word) => (
                 <span key={word}>#{word}</span>
               ))}
             </div>
@@ -473,9 +524,9 @@ export default function Result() {
                 cardName={card.name}
                 cardImage={card.image}
                 question={content}
-                advice={resultData.advice}
-                meaning={resultData.meaning}
-                keywords={resultData.keywords}
+                advice={result.advice}
+                meaning={result.meaning}
+                keywords={result.keywords}
                 isReversed={isReversed}
               />
             </div>

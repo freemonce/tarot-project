@@ -1,3 +1,6 @@
+// src/components/mypage/HistoryList.tsx
+import React, { memo } from "react";
+
 import EmptyState from "./EmptyState";
 import HistoryCard from "./HistoryCard";
 import { HistoryItem } from "../../types/history";
@@ -10,7 +13,7 @@ type Props = {
   onOpen: (item: HistoryItem) => void;
 };
 
-export default function HistoryList({
+function HistoryList({
   data,
   keyword,
   handleDelete,
@@ -20,17 +23,20 @@ export default function HistoryList({
   if (!data.length) return <EmptyState navigate={() => {}} />;
 
   return (
-    <div className="history-list">
-      {data.map((item) => (
-        <HistoryCard
-          key={item.date}
-          item={item}
-          keyword={keyword}
-          handleDelete={handleDelete}
-          handleFavorite={handleFavorite}
-          onOpen={() => onOpen(item)}
-        />
+    <section className="history-list">
+      {data.map((item, index) => (
+        <div key={item.date} className={index < 10 ? "initial-show" : ""}>
+          <HistoryCard
+            item={item}
+            keyword={keyword}
+            handleDelete={handleDelete}
+            handleFavorite={handleFavorite}
+            onOpen={onOpen}
+          />
+        </div>
       ))}
-    </div>
+    </section>
   );
 }
+
+export default memo(HistoryList);

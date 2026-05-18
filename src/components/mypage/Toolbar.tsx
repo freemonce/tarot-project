@@ -1,8 +1,22 @@
+// src/components/mypage/Toolbar.tsx
+
 import Button from "../Button";
+
+type SortType = "latest" | "oldest";
+
+type FilterType =
+  | "all"
+  | "love"
+  | "career"
+  | "money"
+  | "mind"
+  | "relation"
+  | "future"
+  | "choice";
 
 type Props = {
   filter: string;
-  setFilter: (v: any) => void;
+  setFilter: (v: FilterType) => void;
   CATEGORY_OPTIONS: { value: string; label: string }[];
 
   favFirst: boolean;
@@ -12,7 +26,7 @@ type Props = {
   setKeyword: (v: string) => void;
 
   sort: string;
-  setSort: (v: any) => void;
+  setSort: (v: SortType) => void;
 
   showFavOnly: boolean;
   setShowFavOnly: (v: boolean) => void;
@@ -45,13 +59,16 @@ export default function Toolbar({
   handleExport,
 }: Props) {
   return (
-    <section className="mypage-topbar">
+    <section className="mypage-topbar glass-panel">
       <p className="backup-guide">
         💾 백업: 파일로 저장 📂 불러오기: 파일 불러오기
       </p>
 
       <div className="toolbar-controls">
-        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value as FilterType)}
+        >
           {CATEGORY_OPTIONS.map((item) => (
             <option key={item.value} value={item.value}>
               {item.label}
@@ -79,7 +96,10 @@ export default function Toolbar({
           )}
         </div>
 
-        <select value={sort} onChange={(e) => setSort(e.target.value)}>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as SortType)}
+        >
           <option value="latest">최신순</option>
           <option value="oldest">오래된순</option>
         </select>

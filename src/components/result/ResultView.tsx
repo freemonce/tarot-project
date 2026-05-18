@@ -1,5 +1,7 @@
+// src/components/result/ResultView.tsx
+
 import type { TarotCard } from "../../types/tarot";
-import type { ResultData } from "../../hooks/useResultData";
+import type { ResultData } from "../../services/getResultData";
 
 type Props = {
   card: TarotCard;

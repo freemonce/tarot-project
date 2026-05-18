@@ -1,3 +1,5 @@
+// src/types/history.ts
+
 import { TarotCard } from "./tarot";
 
 export type CategoryType =
@@ -10,15 +12,32 @@ export type CategoryType =
   | "future"
   | "choice";
 
-export interface HistoryItem {
-  id: string; // uuid 또는 timestamp
+export type ToneType = "hope" | "warning" | "emotion" | "neutral";
+
+export type HistoryItem = {
+  id?: string;
   card: TarotCard;
+
   content: string;
   category: CategoryType;
-  date: string; // ISO 문자열
+  date: string;
+
   favorite: boolean;
-  isReversed: boolean;
-}
+  isReversed?: boolean;
+
+  summary: string;
+
+  meaning: string;
+  advice: string;
+  keywords: string[];
+  flow: string[];
+
+  tone: ToneType;
+
+  questionType?: string;
+  subCategory?: string;
+  version?: number;
+};
 
 export interface BackupData {
   version: number;

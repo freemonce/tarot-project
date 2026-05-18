@@ -2,16 +2,46 @@
 
 import { HistoryItem } from "../types/history";
 
+const STORAGE_VERSION = 2;
+
 export function getResults(): HistoryItem[] {
-  return safeStorage.get<HistoryItem[]>(KEYS.RESULTS, []);
+  const raw = safeStorage.get<HistoryItem[]>(KEYS.RESULTS, []);
+
+  return raw.map(normalizeHistory);
 }
 
 export function saveResults(data: HistoryItem[]) {
-  safeStorage.set(KEYS.RESULTS, data);
+  safeStorage.set(KEYS.RESULTS, data.map(normalizeHistory));
 }
 
 export function clearResults() {
   safeStorage.remove(KEYS.RESULTS);
+}
+
+/* =========================
+   NORMALIZE / MIGRATE
+========================= */
+function normalizeHistory(item: any): HistoryItem {
+  return {
+    ...item,
+
+    version: STORAGE_VERSION,
+
+    meaning:
+      item.meaning || item.card?.meaning || "카드 의미 데이터가 없습니다.",
+
+    advice: item.advice || item.card?.advice || "조언 데이터가 없습니다.",
+
+    keywords: item.keywords?.length ? item.keywords : item.card?.keywords || [],
+
+    flow: Array.isArray(item.flow) ? item.flow : [],
+
+    summary: item.summary || "현재 흐름을 분석 중입니다.",
+
+    tone: item.tone || "neutral",
+
+    favorite: item.favorite ?? false,
+  };
 }
 
 const KEYS = {
@@ -67,7 +97,7 @@ export function importResults(fileContent: string): HistoryItem[] {
       throw new Error();
     }
 
-    return parsed as HistoryItem[];
+    return parsed.map(normalizeHistory);
   } catch {
     throw new Error("INVALID_FILE");
   }
@@ -77,9 +107,11 @@ export function mergeResults(
   oldList: HistoryItem[],
   newList: HistoryItem[],
 ): HistoryItem[] {
-  const merged = [...oldList, ...newList];
+  const map = new Map<string, HistoryItem>();
 
-  return merged.filter(
-    (v, i, arr) => arr.findIndex((x) => x.date === v.date) === i,
-  );
+  [...oldList, ...newList].forEach((item) => {
+    map.set(item.date, normalizeHistory(item));
+  });
+
+  return Array.from(map.values());
 }

@@ -26,8 +26,18 @@ import { getStreakDays, getTopCategory } from "../services/stats";
 import { HistoryItem } from "../types/history";
 import Toolbar from "../components/mypage/Toolbar";
 import HistoryList from "../components/mypage/HistoryList";
-import InsightDeep from "../components/mypage/InsightDeep";
+import MyPageInsight from "../components/mypage/MyPageInsight";
 import DetailModal from "../components/mypage/DetailModal";
+import useDebounce from "../hooks/useDebounce";
+import useHistoryFilter from "../hooks/useHistoryFilter";
+import {
+  getTopCards,
+  getTopType,
+  getRecentKeywords,
+  getMoodFlow,
+  getMonthCount,
+} from "../services/stats/insight";
+import useInfiniteScroll from "../hooks/useInfiniteScroll";
 
 type SortType = "latest" | "oldest";
 
@@ -38,6 +48,7 @@ type FilterType =
   | "money"
   | "mind"
   | "relation"
+  | "health"
   | "future"
   | "choice";
 
@@ -48,6 +59,7 @@ const CATEGORY_OPTIONS = [
   { value: "money", label: "금전" },
   { value: "mind", label: "심리" },
   { value: "relation", label: "인간관계" },
+  { value: "health", label: "건강" },
   { value: "future", label: "미래운세" },
   { value: "choice", label: "선택/결정" },
 ];
@@ -58,6 +70,8 @@ export default function MyPage() {
   const navigate = useNavigate();
 
   const closeTimer = useRef<number | null>(null);
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   /* =========================
      STATE
@@ -76,6 +90,8 @@ export default function MyPage() {
   const [keyword, setKeyword] = useState(
     () => localStorage.getItem("mypage_keyword") || "",
   );
+
+  const debouncedKeyword = useDebounce(keyword, 300);
 
   const [sort, setSort] = useState<SortType>(() => {
     const saved = localStorage.getItem("mypage_sort");
@@ -197,63 +213,43 @@ export default function MyPage() {
   ========================= */
   const selectedReversed = selected?.isReversed ?? false;
 
-  const selectedMeaning = selectedReversed
-    ? (selected?.card.reversedMeaning ?? selected?.card.meaning)
-    : selected?.card.meaning;
+  const selectedMeaning =
+    selected?.meaning ||
+    (selectedReversed
+      ? (selected?.card.reversedMeaning ?? selected?.card.meaning)
+      : selected?.card.meaning);
 
-  const selectedAdvice = selectedReversed
-    ? (selected?.card.reversedAdvice ?? selected?.card.advice)
-    : selected?.card.advice;
+  const selectedAdvice =
+    selected?.advice ||
+    (selectedReversed
+      ? (selected?.card.reversedAdvice ?? selected?.card.advice)
+      : selected?.card.advice);
 
-  const selectedKeywords =
-    selectedReversed && selected?.card.reversedKeywords?.length
+  const selectedKeywords = selected?.keywords?.length
+    ? selected.keywords
+    : selectedReversed && selected?.card.reversedKeywords?.length
       ? selected.card.reversedKeywords
       : selected?.card.keywords || [];
 
   /* =========================
-     FILTERED LIST
-  ========================= */
-  const filteredList = useMemo(() => {
-    let data = [...list];
+   FILTERED LIST
+========================= */
 
-    if (filter !== "all") {
-      data = data.filter((item) => item.category === filter);
-    }
+  const filteredList = useHistoryFilter({
+    data: list,
 
-    if (showFavOnly) {
-      data = data.filter((item) => item.favorite);
-    }
+    query: debouncedKeyword,
 
-    const search = keyword.trim().toLowerCase();
+    sort,
 
-    if (search) {
-      data = data.filter((item) => {
-        const pool = [
-          item.content,
-          item.card.name,
-          item.card.meaning,
-          item.card.advice,
-          ...(item.card.keywords || []),
-        ]
-          .join(" ")
-          .toLowerCase();
+    category: filter,
 
-        return pool.includes(search);
-      });
-    }
+    tone: "all",
 
-    data.sort((a, b) => {
-      if (favFirst && !!a.favorite !== !!b.favorite) {
-        return a.favorite ? -1 : 1;
-      }
+    favoriteOnly: showFavOnly,
 
-      return sort === "latest"
-        ? new Date(b.date).getTime() - new Date(a.date).getTime()
-        : new Date(a.date).getTime() - new Date(b.date).getTime();
-    });
-
-    return data;
-  }, [list, filter, keyword, sort, showFavOnly, favFirst]);
+    favFirst,
+  });
 
   const streak = getStreakDays(list);
   const topCategory = getTopCategory(list);
@@ -272,62 +268,15 @@ export default function MyPage() {
     [list],
   );
 
-  const topType = useMemo(() => {
-    if (!list.length) return "-";
+  const topCards = getTopCards(list);
 
-    const map: Record<string, number> = {};
+  const topType = getTopType(list);
 
-    list.forEach((item) => {
-      map[item.card.type] = (map[item.card.type] || 0) + 1;
-    });
+  const recentKeywords = getRecentKeywords(list);
 
-    return Object.entries(map).sort((a, b) => b[1] - a[1])[0][0];
-  }, [list]);
+  const moodFlow = getMoodFlow(list);
 
-  const recentKeywords = useMemo(() => {
-    const words = list
-      .slice(0, 5)
-      .flatMap((item) => item.card.keywords || [])
-      .slice(0, 3);
-
-    return words.length ? words.join(" / ") : "-";
-  }, [list]);
-
-  const topCards = useMemo(() => {
-    const map: Record<string, number> = {};
-
-    list.forEach((item) => {
-      map[item.card.name] = (map[item.card.name] || 0) + 1;
-    });
-
-    return Object.entries(map)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3);
-  }, [list]);
-
-  const moodFlow = useMemo(() => {
-    const recent = list.slice(0, 5).flatMap((item) => item.card.keywords || []);
-
-    const joined = recent.join(" ");
-
-    if (/불안|걱정|혼란|갈등/.test(joined)) return "불안기 😵";
-    if (/회복|안정|치유|평화/.test(joined)) return "회복기 🌿";
-    if (/성장|도전|기회|시작/.test(joined)) return "상승기 🚀";
-
-    return "변화기 ✨";
-  }, [list]);
-
-  const monthCount = useMemo(() => {
-    const now = new Date();
-
-    return list.filter((item) => {
-      const d = new Date(item.date);
-
-      return (
-        d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()
-      );
-    }).length;
-  }, [list]);
+  const monthCount = getMonthCount(list);
 
   const hasHistory = filteredList.length > 0;
 
@@ -345,14 +294,19 @@ export default function MyPage() {
 
   const handleExport = () => {
     const data = JSON.stringify(list);
-    const blob = new Blob([data], { type: "application/json" });
+    const blob = new Blob([data], {
+      type: "application/json",
+    });
 
     const url = URL.createObjectURL(blob);
+
     const a = document.createElement("a");
 
     a.href = url;
     a.download = "tarot_backup.json";
     a.click();
+
+    URL.revokeObjectURL(url);
   };
 
   /* =========================
@@ -393,6 +347,14 @@ export default function MyPage() {
     setVisibleCount(10);
   }, [keyword, filter, sort, showFavOnly, favFirst]);
 
+  useInfiniteScroll({
+    target: loadMoreRef,
+    hasMore,
+    onLoadMore: () => {
+      setVisibleCount((prev) => prev + 10);
+    },
+  });
+
   /* =========================
      UI
   ========================= */
@@ -416,59 +378,17 @@ export default function MyPage() {
 
         {/* INSIGHT */}
         {list.length > 0 && (
-          <>
-            <section className="insight-grid">
-              <div className="insight-box">
-                <span>총 기록</span>
-                <strong>{totalCount}개</strong>
-              </div>
-
-              <div className="insight-box">
-                <span>가장 많이 나온 타입</span>
-                <strong>{topType}</strong>
-              </div>
-
-              <div className="insight-box">
-                <span>최근 키워드</span>
-                <strong>{recentKeywords}</strong>
-              </div>
-
-              <div className="insight-box">
-                <span>TOP3 카드</span>
-                <div className="rank-list">
-                  {topCards.map(([name, count], i) => (
-                    <div key={name} className="rank-row">
-                      <b>{i === 0 ? "🥇" : i === 1 ? "🥈" : "🥉"}</b>
-                      <em>{name}</em>
-                      <strong>{count}회</strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="insight-box">
-                <span>최근 감정 흐름</span>
-                <strong>{moodFlow}</strong>
-              </div>
-
-              <div className="insight-box">
-                <span>이번 달 질문 수</span>
-                <strong>{monthCount}회</strong>
-              </div>
-
-              <div className="insight-box">
-                <span>연속 기록</span>
-                <strong>{streak}일 🔥</strong>
-              </div>
-
-              <div className="insight-box">
-                <span>가장 많이 묻는 주제</span>
-                <strong>{topCategory}</strong>
-              </div>
-            </section>
-
-            <InsightDeep list={list} />
-          </>
+          <MyPageInsight
+            totalCount={totalCount}
+            topType={topType}
+            recentKeywords={recentKeywords}
+            topCards={topCards}
+            moodFlow={moodFlow}
+            monthCount={monthCount}
+            streak={streak}
+            topCategory={topCategory}
+            list={list}
+          />
         )}
 
         {/* TOOLBAR */}
@@ -495,7 +415,9 @@ export default function MyPage() {
         {!list.length ? (
           <EmptyState navigate={navigate} />
         ) : !hasHistory ? (
-          <div className="empty-filter-result">검색 결과가 없습니다.</div>
+          <div className="empty-filter-result glass-panel">
+            검색 결과가 없습니다.
+          </div>
         ) : (
           <>
             <HistoryList
@@ -506,17 +428,7 @@ export default function MyPage() {
               onOpen={openModal}
             />
 
-            {hasMore && (
-              <div className="load-more-wrap">
-                <Button
-                  variant="ghost"
-                  className="load-more-btn"
-                  onClick={() => setVisibleCount((prev) => prev + 10)}
-                >
-                  이전 기록 10개 더 보기
-                </Button>
-              </div>
-            )}
+            {hasMore && <div ref={loadMoreRef} className="load-trigger" />}
           </>
         )}
       </div>

@@ -866,7 +866,7 @@ export const pentacles: TarotCard[] = [
     englishName: "Ten of Pentacles",
     type: "Pents",
     number: 10,
-    keywords: ["유산", "안정", "부", "가족", "공통체", "부동산"],
+    keywords: ["유산", "안정", "부", "가족", "공동체", "부동산"],
     reversedKeywords: ["가족 갈등", "불안정", "손실", "기반 흔들림"],
     image: "/images/Pentacles/pentacles10.webp",
 

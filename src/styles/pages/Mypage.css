@@ -12,6 +12,11 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button,
+.history-card {
+  touch-action: manipulation;
+}
+
 :root {
   --gold: #ffd978;
   --gold-soft: #ffe8a1;
@@ -33,7 +38,7 @@ a {
   position: relative;
   min-height: 100vh;
   padding: 72px 20px;
-  overflow: hidden;
+  overflow-x: hidden;
   color: var(--text);
 
   background:
@@ -136,14 +141,16 @@ a {
 /* ========================================
    COMMON PANEL
 ======================================== */
-.insight-box,
-.mypage-topbar,
-.history-card,
-.empty-filter-result {
+.glass-panel {
   background: var(--panel);
   border: 1px solid var(--line);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+.detail-modal,
+.history-card.initial-show {
+  will-change: transform, opacity;
 }
 
 /* ========================================
@@ -328,7 +335,7 @@ a {
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.04);
   color: white;
-  width: 200px;
+  width: 100%;
 }
 
 .search-box input:focus {
@@ -467,19 +474,15 @@ a {
   position: relative;
   overflow: hidden;
   padding: 24px;
+  contain: layout paint;
   border-radius: 24px;
   cursor: pointer;
+  transform: translateZ(0);
 
   transition:
-    transform var(--transition),
-    border-color var(--transition),
-    box-shadow var(--transition);
-}
-
-.history-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 217, 120, 0.22);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform 0.18s ease,
+    border-color 0.24s ease,
+    box-shadow 0.24s ease;
 }
 
 .history-glow {
@@ -578,7 +581,7 @@ a {
   padding: 20px;
 
   background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
 
   opacity: 0;
   transition: opacity 0.24s ease;
@@ -606,6 +609,7 @@ a {
 
   padding: 28px;
   border-radius: 26px;
+  contain: content;
 
   background: linear-gradient(
     135deg,
@@ -622,6 +626,7 @@ a {
   transform: translateY(24px) scale(0.96);
   opacity: 0;
 
+  overscroll-behavior: contain;
   transition:
     transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.28s ease;
@@ -641,6 +646,15 @@ a {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+.detail-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.detail-modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
 }
 
 /* 카드 블록 */
@@ -905,10 +919,20 @@ a {
   }
 }
 
-@media (hover: none) {
+/* PC hover */
+@media (hover: hover) and (pointer: fine) {
   .history-card:hover {
-    transform: none;
-    box-shadow: none;
+    transform: translate3d(0, -4px, 0);
+    border-color: rgba(255, 217, 120, 0.22);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Mobile touch */
+@media (hover: none) {
+  .history-card:active {
+    transform: scale3d(0.985, 0.985, 1);
+    filter: brightness(1.03);
   }
 }
 
@@ -969,7 +993,24 @@ a {
 
 /* 새 카드 등장감 */
 .history-list .history-card {
-  animation: fadeUp 0.45s ease;
+  animation: none;
+}
+
+.initial-show .history-card {
+  animation: fadeUp 0.45s ease both;
+  will-change: transform, opacity;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {
@@ -1071,4 +1112,157 @@ label.btn {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.tone-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  margin-bottom: 10px;
+
+  backdrop-filter: blur(10px);
+}
+
+.tone-badge.hope {
+  background: rgba(255, 215, 120, 0.14);
+  color: #ffd76f;
+}
+
+.tone-badge.warning {
+  background: rgba(255, 120, 120, 0.14);
+  color: #ff8f8f;
+}
+
+.tone-badge.emotion {
+  background: rgba(120, 180, 255, 0.14);
+  color: #8fc8ff;
+}
+
+.history-flow-preview {
+  margin-top: 10px;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  color: rgba(255, 255, 255, 0.72);
+
+  padding-left: 4px;
+}
+
+.detail-meta {
+  margin-bottom: 16px;
+
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.detail-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.detail-flow p {
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.7;
+}
+
+.detail-summary {
+  margin-bottom: 18px;
+
+  padding: 16px 18px;
+  border-radius: 18px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 217, 120, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
+
+  border: 1px solid rgba(255, 217, 120, 0.12);
+}
+
+.detail-summary h4 {
+  margin-bottom: 10px;
+  color: #ffd978;
+}
+
+.detail-summary p {
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.detail-flow-item {
+  display: flex;
+  gap: 10px;
+
+  align-items: flex-start;
+
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  animation: fadeUp 0.4s ease;
+}
+
+.detail-flow-item span {
+  color: #ffd978;
+}
+
+.history-summary {
+  margin-top: 10px;
+  margin-bottom: 12px;
+
+  font-size: 0.92rem;
+  line-height: 1.6;
+
+  padding: 10px 12px;
+
+  border-radius: 12px;
+
+  backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 희망 */
+.history-summary.hope {
+  color: #ffe7a3;
+
+  background: rgba(255, 215, 90, 0.08);
+}
+
+/* 경고 */
+.history-summary.warning {
+  color: #ffb4b4;
+
+  background: rgba(255, 80, 80, 0.08);
+}
+
+/* 감정 */
+.history-summary.emotion {
+  color: #b9d9ff;
+
+  background: rgba(120, 170, 255, 0.08);
+}
+
+/* 기본 */
+.history-summary.neutral {
+  color: #ddd;
+
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.load-trigger {
+  width: 100%;
+  height: 40px;
 }

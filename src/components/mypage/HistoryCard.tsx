@@ -1,14 +1,17 @@
-import React, { memo, useMemo } from "react";
+// src/components/mypage/HistoryCard.tsx
+
+import React, { memo, useMemo, useCallback } from "react";
 import Button from "../Button";
 import { HistoryItem } from "../../types/history";
 import { highlightText } from "../../utils/highlight";
+import { formatDate } from "../../utils/date";
 
 type Props = {
   item: HistoryItem;
   keyword: string;
   handleDelete: (date: string) => void;
   handleFavorite: (date: string) => void;
-  onOpen: () => void;
+  onOpen: (item: HistoryItem) => void;
 };
 
 const categoryLabelMap: Record<string, string> = {
@@ -30,7 +33,7 @@ function HistoryCard({
   onOpen,
 }: Props) {
   const formattedDate = useMemo(() => {
-    return new Date(item.date).toLocaleDateString("ko-KR");
+    return formatDate(item.date);
   }, [item.date]);
 
   const categoryLabel = useMemo(() => {
@@ -38,19 +41,12 @@ function HistoryCard({
   }, [item.category]);
 
   const previewKeywords = useMemo(() => {
-    const source =
-      item.isReversed && item.card.reversedKeywords?.length
-        ? item.card.reversedKeywords
-        : item.card.keywords;
+    return item.keywords?.slice(0, 3) || [];
+  }, [item.keywords]);
 
-    return source?.slice(0, 3) || [];
-  }, [item.isReversed, item.card]);
-
-  const cardName = item.card?.name || "Tarot";
-
-  const handleOpen = () => {
-    onOpen();
-  };
+  const handleOpen = useCallback(() => {
+    onOpen(item);
+  }, [onOpen, item]);
 
   const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -59,24 +55,42 @@ function HistoryCard({
 
   const handleDetailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    onOpen();
+    onOpen(item);
   };
 
   const previewMeaning = useMemo(() => {
-    return item.isReversed
-      ? (item.card.reversedMeaning ?? item.card.meaning)
-      : item.card.meaning;
-  }, [item.isReversed, item.card]);
+    const text = item.meaning || item.card.meaning || "의미 데이터 없음";
+
+    return text.length > 120 ? `${text.slice(0, 120)}...` : text;
+  }, [item.meaning, item.card.meaning]);
+
+  const highlightedMeaning = useMemo(() => {
+    return highlightText(previewMeaning, keyword);
+  }, [previewMeaning, keyword]);
+
+  const highlightedQuestion = useMemo(() => {
+    if (!keyword.trim()) return item.content;
+
+    return highlightText(item.content, keyword);
+  }, [item.content, keyword]);
+
+  const highlightedKeywords = useMemo(() => {
+    return previewKeywords.map((tag) => ({
+      original: tag,
+      highlighted: highlightText(tag, keyword),
+    }));
+  }, [previewKeywords, keyword]);
 
   return (
     <article
-      className="history-card"
+      className="history-card glass-panel"
       onClick={handleOpen}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
-          onOpen();
+          e.preventDefault();
+          onOpen(item);
         }
       }}
     >
@@ -84,29 +98,42 @@ function HistoryCard({
 
       <div className="history-top">
         <span className="history-date">{formattedDate}</span>
-        <span className="history-badge">{cardName}</span>
+
+        <span className="history-badge">
+          {item.questionType || categoryLabel}
+        </span>
       </div>
 
-      <h3 className="history-question">
-        {highlightText(item.content, keyword)}
-      </h3>
+      <div className={`tone-badge ${item.tone}`}>
+        {!item.tone && "🌙 일반"}
+        {item.tone === "hope" && "✨ 희망"}
+        {item.tone === "warning" && "⚠ 주의"}
+        {item.tone === "emotion" && "💙 감정"}
+      </div>
+
+      <h3 className="history-question">{highlightedQuestion}</h3>
+
+      <p className="history-message">{highlightedMeaning}</p>
 
       <p className="history-category">{categoryLabel}</p>
 
-      <p className="history-message">
-        {" "}
-        {highlightText(previewMeaning, keyword)}
-      </p>
+      {item.summary && (
+        <p className={`history-summary ${item.tone}`}>{item.summary}</p>
+      )}
 
-      <h3 className="history-title">
+      {item.flow?.[0] && (
+        <p className="history-flow-preview">✦ {item.flow[0]}</p>
+      )}
+
+      <h3 className="history-card-name glass-panel">
         {item.card.name}
         {item.isReversed && <span className="reverse-icon"> 🔄</span>}
       </h3>
 
       {previewKeywords.length > 0 && (
         <div className="history-keywords">
-          {previewKeywords.map((tag) => (
-            <span key={tag}>#{highlightText(tag, keyword)}</span>
+          {highlightedKeywords.map((tag) => (
+            <span key={tag.original}>#{tag.highlighted}</span>
           ))}
         </div>
       )}
@@ -135,4 +162,6 @@ function HistoryCard({
   );
 }
 
-export default memo(HistoryCard);
+export default memo(HistoryCard, (prev, next) => {
+  return prev.item === next.item && prev.keyword === next.keyword;
+});

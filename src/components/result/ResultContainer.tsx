@@ -1,7 +1,9 @@
+// src/components/result/ResultContainer.tsx
+
 import { useLocation } from "react-router-dom";
 import { ResultPageState } from "../../types/navigation";
 import { CategoryKey } from "../../types/tarot";
-import { getResultData } from "../../hooks/useResultData";
+import { getResultData } from "../../services/getResultData";
 import { buildShareText, copyToClipboard } from "../../services/shareService";
 import ResultView from "./ResultView";
 import { tarotCards } from "../../data/tarot";
@@ -27,8 +29,6 @@ export default function ResultContainer() {
   const resultData = getResultData({
     card,
     category: safeCategory,
-    subCategory: state?.subCategory,
-    questionType: state?.questionType,
     isReversed,
   });
 
