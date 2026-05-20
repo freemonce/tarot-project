@@ -10,6 +10,8 @@ export type ToneStyle =
   | "cold"
   | "poetic";
 
+export type Tone = "positive" | "neutral" | "negative";
+
 export type ResultFlow = {
   intro?: string[];
 

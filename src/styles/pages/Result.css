@@ -191,10 +191,6 @@
   transform: translateY(0);
 }
 
-.result-content.hope {
-  border-color: rgba(255, 215, 120, 0.3);
-}
-
 .result-content > * {
   opacity: 0;
   transform: translateY(20px);
@@ -636,4 +632,69 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.result-energy-box {
+  padding: 14px 18px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: rgba(255, 255, 255, 0.78);
+
+  font-size: 0.92rem;
+
+  backdrop-filter: blur(6px);
+}
+
+.result-special-box {
+  margin-top: 24px;
+  padding: 18px;
+
+  border-radius: 18px;
+
+  background: rgba(255, 217, 120, 0.08);
+  border: 1px solid rgba(255, 217, 120, 0.18);
+
+  color: #f7e7b0;
+
+  line-height: 1.7;
+  font-size: 15px;
+
+  backdrop-filter: blur(10px);
+}
+
+.energy-dark {
+  --main-glow: rgba(120, 70, 255, 0.18);
+}
+
+.energy-hope {
+  --main-glow: rgba(255, 220, 120, 0.22);
+}
+
+.energy-anxiety {
+  --main-glow: rgba(80, 140, 255, 0.18);
+}
+
+.energy-warning {
+  --main-glow: rgba(255, 140, 80, 0.18);
+}
+
+.energy-positive {
+  --main-glow: rgba(120, 255, 180, 0.18);
+}
+
+.energy-neutral {
+  --main-glow: rgba(255, 255, 255, 0.08);
+}
+
+.center-light {
+  background: radial-gradient(
+    circle,
+    var(--main-glow, rgba(255, 220, 140, 0.08)),
+    transparent 42%
+  );
 }

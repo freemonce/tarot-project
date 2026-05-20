@@ -8,7 +8,7 @@ import React, {
   CSSProperties,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import html2canvas from "html2canvas";
+import { saveShareImage } from "../services/shareImageService";
 
 import { tarotCards } from "../data/tarot";
 import type { CategoryKey, TarotCard } from "../types/tarot";
@@ -29,6 +29,15 @@ import { saveResult } from "../services/resultService";
 import { buildShareText, copyToClipboard } from "../services/shareService";
 import { generateResult } from "../utils/result/generateResult";
 import { createHistoryItem } from "../utils/history/createHistoryItem";
+import { buildResult } from "../utils/result/buildResult";
+import { cardEnergyMap } from "../data/cardEnergyMap";
+
+import useToast from "../hooks/useToast";
+import ResultMeaning from "../components/result/ResultMeaning";
+import ResultAdvice from "../components/result/ResultAdvice";
+import ResultFlow from "../components/result/ResultFlow";
+import ResultKeywords from "../components/result/ResultKeywords";
+import ResultEnding from "../components/result/ResultEnding";
 
 export type CategoryType =
   | "love"
@@ -89,9 +98,6 @@ export default function Result() {
 
   const savedRef = useRef(false);
   const [isPreparingShare, setIsPreparingShare] = useState(false);
-
-  const [toast, setToast] = useState("");
-  const toastTimer = useRef<number | null>(null);
 
   const [showCard, setShowCard] = useState(false);
   const [showContent, setShowContent] = useState(false);
@@ -189,6 +195,15 @@ export default function Result() {
     );
   }, [card, safeCategory, state.questionType, isReversed]);
 
+  const specialResult = buildResult({
+    mainCategory,
+    subCategory: state.subCategory ?? "",
+    questionType: state.questionType ?? "",
+    tone: result.tone,
+  });
+
+  const cardEnergy = cardEnergyMap[card.name] ?? "neutral";
+
   const endingText =
     ENDING_MESSAGE[safeCategory] ??
     "당신이 찾는 답은 이미 마음속에서 움직이고 있습니다.";
@@ -196,6 +211,7 @@ export default function Result() {
   /* =====================================
    save result (FIXED)
 ===================================== */
+  const { toast, showToast } = useToast();
 
   useEffect(() => {
     if (!state || savedRef.current) return;
@@ -238,106 +254,10 @@ export default function Result() {
   };
 
   /* =====================================
-     toast
-  ===================================== */
-  const showToast = (msg: string) => {
-    setToast(msg);
-
-    if (toastTimer.current) {
-      clearTimeout(toastTimer.current);
-    }
-
-    toastTimer.current = window.setTimeout(() => {
-      setToast("");
-      toastTimer.current = null;
-    }, 1800);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-    };
-  }, []);
-
-  /* =====================================
-     share functions
-  ===================================== */
-
-  const saveShareImage = async () => {
-    if (isPreparingShare) return;
-    setIsPreparingShare(true);
-
-    try {
-      await document.fonts.ready;
-
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      if (!shareRef.current) {
-        showToast("공유 카드를 불러오지 못했습니다.");
-        return;
-      }
-
-      const canvas = await html2canvas(shareRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: "#080808",
-        windowWidth: 1080,
-        windowHeight: 1080,
-        logging: false,
-
-        // 폰트 렌더링을 위해 이미지 로드 대기 옵션 추가
-        onclone: (doc: Document) => {
-          const root = doc.querySelector(".share-card-root") as HTMLElement;
-
-          if (root) {
-            root.style.opacity = "1";
-            root.style.transform = "none";
-            root.style.animation = "none";
-            root.style.filter = "none";
-            root.style.width = "1080px";
-            root.style.height = "1080px";
-            root.style.display = "flex";
-          }
-
-          const imgs = doc.querySelectorAll("img");
-
-          imgs.forEach((img) => {
-            img.style.objectFit = "cover";
-            img.style.display = "block";
-          });
-
-          const title = doc.querySelector(".share-card-title") as HTMLElement;
-
-          if (title) {
-            title.style.textShadow = "none";
-            title.style.letterSpacing = "-0.02em";
-          }
-        },
-      });
-
-      const url = canvas.toDataURL("image/png", 0.9);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `tarot-reading-${Date.now()}.png`;
-      link.click();
-
-      showToast("📷 공유 이미지 저장 완료");
-    } catch {
-      showToast("이미지 저장 실패");
-    } finally {
-      setIsPreparingShare(false);
-    }
-  };
-
-  /* =====================================
      UI
   ===================================== */
   return (
-    <div className="result-root show">
+    <div className={`result-root show energy-${cardEnergy}`}>
       {toast && <div className="toast">{toast}</div>}
 
       <div className="center-light" />
@@ -395,79 +315,36 @@ export default function Result() {
 
           {/* meaning */}
           {step >= STEP.MEANING && (
-            <section className="section-box reveal-up">
-              <h3>
-                {card.name}
-                {isReversed ? " (역방향)" : ""}
-              </h3>
-
-              {result.meaning
-                .split(".")
-                .filter((line) => line.trim() !== "")
-                .map((line, i) => (
-                  <p
-                    key={i}
-                    className="line-appear"
-                    style={{ animationDelay: `${i * 0.4}s` }}
-                  >
-                    {line}.
-                  </p>
-                ))}
-            </section>
+            <ResultMeaning
+              card={card}
+              isReversed={isReversed}
+              meaning={result.meaning}
+            />
           )}
 
           {/* advice */}
           {step >= STEP.ADVICE && (
-            <section className="section-box reveal-up">
-              <h3>카드의 조언</h3>
-
-              {result.advice
-                .split(".")
-                .filter((line) => line.trim() !== "")
-                .map((line, i) => (
-                  <p
-                    key={i}
-                    className="line-appear"
-                    style={{ animationDelay: `${i * 0.3}s` }}
-                  >
-                    {line}.
-                  </p>
-                ))}
-            </section>
+            <>
+              <ResultAdvice advice={result.advice} cardEnergy={cardEnergy} />
+            </>
           )}
 
-          {/* flow */}
-          {step >= STEP.ADVICE && result.flow.length > 0 && (
-            <section className="section-box reveal-up">
-              <h3>흐름의 변화</h3>
-
-              <div className="flow-list">
-                {result.flow.map((item, i) => (
-                  <p
-                    key={i}
-                    className="flow-item line-appear"
-                    style={{ animationDelay: `${i * 0.35}s` }}
-                  >
-                    ✦ {item}
-                  </p>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* keywords */}
-          {step >= STEP.KEYWORD && (
-            <div className="keyword-wrap reveal-up">
-              {(result.keywords ?? []).map((word) => (
-                <span key={word}>#{word}</span>
-              ))}
+          {specialResult?.specialMessage && (
+            <div className="result-special-box reveal-up">
+              <p>{specialResult.specialMessage}</p>
             </div>
           )}
 
-          {/* ending */}
+          {/* flow */}
+          {step >= STEP.ADVICE && <ResultFlow flow={result.flow} />}
+
+          {/* keywords */}
           {step >= STEP.KEYWORD && (
-            <div className="emotion-ending reveal-up">{endingText}</div>
+            <ResultKeywords keywords={result.keywords} />
           )}
+
+          {/* ending */}
+          {step >= STEP.KEYWORD && <ResultEnding endingText={endingText} />}
 
           <div id="result-card"></div>
 
@@ -477,7 +354,32 @@ export default function Result() {
               <p className="share-title">이 순간을 남겨보세요</p>
 
               <div className="share-group">
-                <Button onClick={saveShareImage}>
+                <Button
+                  onClick={async () => {
+                    if (isPreparingShare) return;
+
+                    setIsPreparingShare(true);
+
+                    try {
+                      if (!shareRef.current) {
+                        showToast("공유 카드를 불러오지 못했습니다.");
+                        return;
+                      }
+
+                      await saveShareImage({
+                        target: shareRef.current,
+                        onSuccess: () => {
+                          showToast("📷 공유 이미지 저장 완료");
+                        },
+                        onFail: () => {
+                          showToast("이미지 저장 실패");
+                        },
+                      });
+                    } finally {
+                      setIsPreparingShare(false);
+                    }
+                  }}
+                >
                   {isPreparingShare
                     ? "📸 생성 중..."
                     : "📷 오늘의 카드 기록하기"}
@@ -507,6 +409,7 @@ export default function Result() {
             </div>
           )}
         </div>
+
         {isPreparingShare && (
           <div
             style={{

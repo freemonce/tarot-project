@@ -42,17 +42,38 @@ export const categoryUI = [
 ] as const;
 
 export const subCategoryMap: Record<UICategoryKey, string[]> = {
-  love: ["썸", "연애", "재회", "결혼"],
+  love: ["썸", "연애", "재회", "짝사랑", "권태기", "연락", "거리감", "결혼"],
+
   career: ["취업", "이직", "성장", "선택"],
+
   money: ["재물운", "투자", "지출"],
+
   relation: ["친구", "직장", "갈등"],
+
   self: ["내 상태", "성장", "방향"],
 };
 
 export const questionMap: Record<UICategoryKey, string[]> = {
-  love: ["상대의 마음", "관계의 미래", "주의할 점"],
-  career: ["이 선택이 맞을까?", "성공 가능성", "주의할 점"],
+  love: [
+    "상대의 마음",
+    "관계의 미래",
+    "연락 가능성",
+    "재회 가능성",
+    "주의할 점",
+    "내가 해야 할 행동",
+  ],
+
+  career: [
+    "이 선택이 맞을까?",
+    "성공 가능성",
+    "주의할 점",
+    "합격 가능성",
+    "언제 기회가 올까?",
+  ],
+
   money: ["재물 흐름", "손해 가능성", "기회 여부"],
+
   relation: ["상대의 속마음", "관계 흐름", "갈등 해결"],
+
   self: ["현재 상태", "성장 방향", "필요한 변화"],
 };
