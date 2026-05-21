@@ -1,22 +1,11 @@
 // src/pages/Result.tsx
 
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  CSSProperties,
-} from "react";
+import React, { useRef, useState, CSSProperties } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { saveShareImage } from "../services/shareImageService";
 
-import { tarotCards } from "../data/tarot";
-import type { CategoryKey, TarotCard } from "../types/tarot";
 import type { ResultPageState } from "../types/navigation";
 
-import { STEP } from "../constants/resultStep";
 import Button from "../components/Button";
-import ShareCard from "../components/result/ShareCard";
 
 import "../styles/pages/Result.css";
 
@@ -25,40 +14,19 @@ import useCardAnimation from "../hooks/useCardAnimation";
 import useResultClosing from "../hooks/useResultClosing";
 import useCardTilt from "../hooks/useCardTilt";
 
-import { saveResult } from "../services/resultService";
-import { buildShareText, copyToClipboard } from "../services/shareService";
-import { generateResult } from "../utils/result/generateResult";
-import { createHistoryItem } from "../utils/history/createHistoryItem";
-import { buildResult } from "../utils/result/buildResult";
-import { cardEnergyMap } from "../data/cardEnergyMap";
-
 import useToast from "../hooks/useToast";
-import ResultMeaning from "../components/result/ResultMeaning";
-import ResultAdvice from "../components/result/ResultAdvice";
-import ResultFlow from "../components/result/ResultFlow";
-import ResultKeywords from "../components/result/ResultKeywords";
-import ResultEnding from "../components/result/ResultEnding";
 
-export type CategoryType =
-  | "love"
-  | "career"
-  | "money"
-  | "mind"
-  | "relation"
-  | "health"
-  | "future"
-  | "choice";
+import ResultCard from "../components/result/ResultCard";
+import ResultSharePortal from "../components/result/ResultSharePortal";
 
-const CATEGORY_KEYS = [
-  "love",
-  "career",
-  "money",
-  "mind",
-  "relation",
-  "health",
-  "future",
-  "choice",
-] as const;
+import useResultActions from "../hooks/useResultActions";
+import ResultBody from "../components/result/ResultBody";
+import useResultPage from "../hooks/useResultPage";
+import useResultReveal from "../hooks/useResultReveal";
+import useResultDevice from "../hooks/useResultDevice";
+
+import useResultSave from "../hooks/useResultSave";
+import createShareData from "../utils/result/createShareData";
 
 /* =====================================
    Ending Message
@@ -94,47 +62,30 @@ export default function Result() {
     );
   }
 
+  const {
+    content,
+    mainCategory,
+    safeCategory,
+    isReversed,
+    card,
+    result,
+    specialResult,
+    cardEnergy,
+    endingText,
+  } = useResultPage(state, ENDING_MESSAGE);
+
   const shareRef = useRef<HTMLDivElement>(null);
 
-  const savedRef = useRef(false);
   const [isPreparingShare, setIsPreparingShare] = useState(false);
 
-  const [showCard, setShowCard] = useState(false);
-  const [showContent, setShowContent] = useState(false);
-
-  useEffect(() => {
-    const t1 = setTimeout(() => setShowCard(true), 120);
-    const t2 = setTimeout(() => setShowContent(true), 260);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, []);
-
-  /* =====================================
-     fallback
-  ===================================== */
-  const content = state?.content ?? "";
-  const mainCategory: CategoryType = CATEGORY_KEYS.includes(
-    state?.mainCategory as CategoryType,
-  )
-    ? (state?.mainCategory as CategoryType)
-    : "love";
-  const isReversed = state?.isReversed ?? false;
-
-  const fallbackCard: TarotCard = tarotCards[0];
-
-  const card = useMemo(() => {
-    return state?.card ?? fallbackCard;
-  }, [state]);
+  const { showCard, showContent } = useResultReveal();
 
   /* =====================================
      hooks
   ===================================== */
   const { step, titleTyping } = useResultTimeline();
 
-  const { cardRef, cardSettled } = useCardAnimation(state?.originRect);
+  const { cardRef, cardSettled } = useCardAnimation(state.originRect);
 
   const { handleClose } = useResultClosing();
 
@@ -144,114 +95,40 @@ export default function Result() {
     onMouseLeave,
   } = useCardTilt(cardRef, cardSettled);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const { isMobile } = useResultDevice();
 
   const tiltStyle = isMobile ? {} : originalTiltStyle;
 
-  /* =====================================
-   final data (SAFE VERSION)
-===================================== */
+  const { toast, showToast } = useToast();
 
-  const safeCategory: CategoryKey = CATEGORY_KEYS.includes(
-    mainCategory as CategoryKey,
-  )
-    ? (mainCategory as CategoryKey)
-    : "love";
-
-  const result = useMemo(() => {
-    return (
-      generateResult({
-        card,
-        category: safeCategory,
-        questionType: state.questionType ?? "",
-        isReversed,
-      }) ?? {
-        meaning: "",
-        advice: "",
-
-        keywords: [],
-
-        flow: [],
-
-        tone: "neutral" as const,
-
-        summary: "현재 흐름을 분석 중입니다.",
-
-        special: "",
-        toneStyle: undefined,
-
-        emotionalLevel: 0,
-        chance: 0,
-      }
-    );
-  }, [card, safeCategory, state.questionType, isReversed]);
-
-  const specialResult = buildResult({
-    mainCategory,
-    subCategory: state.subCategory ?? "",
-    questionType: state.questionType ?? "",
-    tone: result.tone,
+  useResultSave({
+    state,
+    card,
+    content,
+    safeCategory,
+    isReversed,
+    result,
   });
-
-  const cardEnergy = cardEnergyMap[card.name] ?? "neutral";
-
-  const endingText =
-    ENDING_MESSAGE[safeCategory] ??
-    "당신이 찾는 답은 이미 마음속에서 움직이고 있습니다.";
 
   /* =====================================
    save result (FIXED)
 ===================================== */
-  const { toast, showToast } = useToast();
 
-  useEffect(() => {
-    if (!state || savedRef.current) return;
+  const shareData = createShareData({
+    card,
+    content,
+    result,
+    isReversed,
+  });
 
-    savedRef.current = true;
-
-    const historyItem = createHistoryItem({
-      card,
-
-      content,
-
-      category: safeCategory,
-
-      subCategory: state.subCategory,
-      questionType: state.questionType,
-
-      isReversed,
-
-      result,
-    });
-
-    saveResult(historyItem);
-  }, [state, card, content, safeCategory, isReversed, result]);
-
-  const handleCopy = async () => {
-    try {
-      const text = buildShareText({
-        card,
-        content,
-        meaning: result.meaning,
-        advice: result.advice,
-        isReversed,
-      });
-
-      await copyToClipboard(text);
-      showToast("📝 결과 복사 완료");
-    } catch {
-      showToast("복사 실패");
-    }
-  };
+  const { handleCopy, handleCopyLink, handleSaveImage } = useResultActions({
+    card,
+    content,
+    result,
+    isReversed,
+    shareRef,
+    showToast,
+  });
 
   /* =====================================
      UI
@@ -265,175 +142,44 @@ export default function Result() {
 
       <div className="result-inner">
         {/* card */}
-        <div className="card-stage">
-          <div className="card-float-layer">
-            <div
-              className={`card-rotate-layer ${isReversed ? "reversed" : ""}`}
-            >
-              <div
-                ref={cardRef}
-                className={`result-card ${showCard ? "show" : ""}`}
-                style={tiltStyle as CSSProperties}
-                onMouseMove={isMobile ? undefined : onMouseMove}
-                onMouseLeave={isMobile ? undefined : onMouseLeave}
-              >
-                <img
-                  src={card.image}
-                  alt={card.name}
-                  className="result-card-img"
-                />
-                <div className="card-shine" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <ResultCard
+          card={card}
+          cardRef={cardRef}
+          isReversed={isReversed}
+          showCard={showCard}
+          tiltStyle={tiltStyle as CSSProperties}
+          onMouseMove={isMobile ? undefined : onMouseMove}
+          onMouseLeave={isMobile ? undefined : onMouseLeave}
+        />
 
         {/* content */}
-        <div className={`result-content ${showContent ? "show" : ""}`}>
-          <p className="cinematic-sub">Tarot Reading</p>
-
-          <div className="result-context">
-            {mainCategory} · {state.subCategory} · {state.questionType}
-          </div>
-
-          <h1 className="main-title">
-            {titleTyping}
-            <span className="cursor">|</span>
-          </h1>
-
-          <p className="flow-line">
-            이 카드는 지금, 당신에게 꼭 필요한 이야기를 전하고 있습니다.
-          </p>
-
-          {/* question */}
-          {step >= STEP.QUESTION && (
-            <div className="question-box reveal-up">
-              <strong>당신의 질문</strong>
-              <p>{content}</p>
-            </div>
-          )}
-
-          {/* meaning */}
-          {step >= STEP.MEANING && (
-            <ResultMeaning
-              card={card}
-              isReversed={isReversed}
-              meaning={result.meaning}
-            />
-          )}
-
-          {/* advice */}
-          {step >= STEP.ADVICE && (
-            <>
-              <ResultAdvice advice={result.advice} cardEnergy={cardEnergy} />
-            </>
-          )}
-
-          {specialResult?.specialMessage && (
-            <div className="result-special-box reveal-up">
-              <p>{specialResult.specialMessage}</p>
-            </div>
-          )}
-
-          {/* flow */}
-          {step >= STEP.ADVICE && <ResultFlow flow={result.flow} />}
-
-          {/* keywords */}
-          {step >= STEP.KEYWORD && (
-            <ResultKeywords keywords={result.keywords} />
-          )}
-
-          {/* ending */}
-          {step >= STEP.KEYWORD && <ResultEnding endingText={endingText} />}
-
-          <div id="result-card"></div>
-
-          {/* share */}
-          {step >= STEP.CTA && (
-            <div className="cta-wrap reveal-up">
-              <p className="share-title">이 순간을 남겨보세요</p>
-
-              <div className="share-group">
-                <Button
-                  onClick={async () => {
-                    if (isPreparingShare) return;
-
-                    setIsPreparingShare(true);
-
-                    try {
-                      if (!shareRef.current) {
-                        showToast("공유 카드를 불러오지 못했습니다.");
-                        return;
-                      }
-
-                      await saveShareImage({
-                        target: shareRef.current,
-                        onSuccess: () => {
-                          showToast("📷 공유 이미지 저장 완료");
-                        },
-                        onFail: () => {
-                          showToast("이미지 저장 실패");
-                        },
-                      });
-                    } finally {
-                      setIsPreparingShare(false);
-                    }
-                  }}
-                >
-                  {isPreparingShare
-                    ? "📸 생성 중..."
-                    : "📷 오늘의 카드 기록하기"}
-                </Button>
-
-                <Button onClick={handleCopy}>📋 이 해석 저장하기</Button>
-
-                <Button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    showToast("🔗 링크 복사 완료");
-                  }}
-                >
-                  🔗 링크 복사
-                </Button>
-              </div>
-
-              <div className="action-group">
-                <Button onClick={() => navigate("/write")}>
-                  🔮 다시 질문하기
-                </Button>
-
-                <Button onClick={handleClose}>📜 내 기록 보기</Button>
-
-                <Button onClick={() => navigate("/")}>🏠 홈으로</Button>
-              </div>
-            </div>
-          )}
-        </div>
+        <ResultBody
+          showContent={showContent}
+          step={step}
+          mainCategory={mainCategory}
+          subCategory={state.subCategory}
+          questionType={state.questionType}
+          titleTyping={titleTyping}
+          content={content}
+          card={card}
+          isReversed={isReversed}
+          result={result}
+          cardEnergy={cardEnergy}
+          specialResult={specialResult}
+          endingText={endingText}
+          isPreparingShare={isPreparingShare}
+          onSaveImage={() =>
+            handleSaveImage(isPreparingShare, setIsPreparingShare)
+          }
+          onCopy={handleCopy}
+          onCopyLink={handleCopyLink}
+          onRetry={() => navigate("/write")}
+          onHistory={handleClose}
+          onHome={() => navigate("/")}
+        />
 
         {isPreparingShare && (
-          <div
-            style={{
-              position: "fixed",
-              top: "-9999px",
-              left: "0",
-              width: "1080px",
-              height: "1080px",
-              overflow: "hidden",
-              zIndex: -100,
-            }}
-          >
-            <div ref={shareRef}>
-              <ShareCard
-                cardName={card.name}
-                cardImage={card.image}
-                question={content}
-                advice={result.advice}
-                meaning={result.meaning}
-                keywords={result.keywords}
-                isReversed={isReversed}
-              />
-            </div>
-          </div>
+          <ResultSharePortal shareRef={shareRef} shareData={shareData} />
         )}
       </div>
     </div>

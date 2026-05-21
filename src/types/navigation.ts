@@ -1,3 +1,5 @@
+// src/types/navigation.ts
+
 import { CategoryType } from "../pages/Result";
 import type { TarotCard, CategoryKey } from "./tarot";
 
