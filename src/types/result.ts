@@ -1,6 +1,5 @@
 // src/types/result.ts
-
-import { ToneType } from "./history";
+import type { ToneType } from "./tone";
 
 export type ToneStyle =
   | "warm"

@@ -134,7 +134,14 @@ export default function Result() {
      UI
   ===================================== */
   return (
-    <div className={`result-root show energy-${cardEnergy}`}>
+    <div
+      className={`
+    result-root
+    show
+    energy-${cardEnergy}
+    tone-${result.tone}
+  `}
+    >
       {toast && <div className="toast">{toast}</div>}
 
       <div className="center-light" />

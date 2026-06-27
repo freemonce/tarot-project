@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 
-import type { HistoryItem, CategoryType, ToneType } from "../types/history";
+import type { HistoryItem, CategoryType } from "../types/history";
+import type { ToneType } from "../types/tone";
 
 import {
   applyHistoryFilters,

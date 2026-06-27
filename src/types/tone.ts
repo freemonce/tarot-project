@@ -8,3 +8,5 @@ export type SpecialTone = {
 
   toneStyle: ToneStyle;
 };
+
+export type ToneType = "neutral" | "hope" | "emotion" | "warning" | "sad";

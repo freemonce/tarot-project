@@ -39,6 +39,16 @@ export function getResultData({
       ? card.reversedKeywords
       : (card.keywords ?? []);
 
+  // 디버그
+  console.log("========== RESULT DEBUG ==========");
+  console.log("card:", card.name);
+  console.log("category:", category);
+  console.log("isReversed:", isReversed);
+  console.log("normal:", normal);
+  console.log("reverse:", reverse);
+  console.log("selected:", selected);
+  console.log("==================================");
+
   return {
     meaning,
     advice,

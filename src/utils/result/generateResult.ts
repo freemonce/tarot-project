@@ -26,7 +26,7 @@ export function generateResult({
   category,
   questionType,
   isReversed = false,
-}: Params): ResultData | null {
+}: Params): ResultData {
   // ✅ 기본 카드 데이터
   const base = getResultData({
     card,
@@ -37,7 +37,28 @@ export function generateResult({
   // ✅ 질문 흐름 데이터
   const categoryData = resultDataMap[category];
 
-  if (!categoryData) return null;
+  if (!categoryData) {
+    return {
+      meaning: "데이터를 불러오는 중입니다.",
+      advice: "잠시 후 다시 확인해주세요.",
+
+      keywords: [],
+
+      flow: [],
+
+      tone: "neutral",
+
+      summary: "흐름을 정리하는 시간이 필요합니다.",
+
+      special: "",
+
+      toneStyle: undefined,
+
+      emotionalLevel: 0,
+
+      chance: 0,
+    };
+  }
 
   const questionFlow = categoryData[questionType];
 

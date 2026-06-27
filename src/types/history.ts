@@ -1,6 +1,7 @@
 // src/types/history.ts
 
 import { TarotCard } from "./tarot";
+import type { ToneType } from "./tone";
 
 export type CategoryType =
   | "love"
@@ -11,8 +12,6 @@ export type CategoryType =
   | "health"
   | "future"
   | "choice";
-
-export type ToneType = "hope" | "warning" | "emotion" | "neutral";
 
 export type HistoryItem = {
   id?: string;
